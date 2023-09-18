@@ -1,0 +1,25 @@
+name: Build
+on:
+  - push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: ${{ !startsWith(github.event.ref, 'refs/tags/') && !contains(github.event.head_commit.message, '[skip build]') }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 6.1
+      - name: Install dependencies
+        run: pnpm install
+        working-directory: frontend
+      - name: Build
+        run: pnpm build
+        working-directory: frontend
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: build
+          path: frontend/dist
