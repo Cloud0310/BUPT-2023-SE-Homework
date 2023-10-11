@@ -8,7 +8,7 @@ module.exports = {
     trailingComma: "none",
     overrides: [
         {
-            files: ["*.css", "*.ts"],
+            files: ["*.css", "*.ts", "*.js", "*.json"],
             options: {
                 tabWidth: 4,
             }
