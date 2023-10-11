@@ -1,10 +1,11 @@
 from flask import Flask, render_template, request, Blueprint, jsonify, session
 from views import api_bp
+import jwt
 
 app = Flask(__name__)
 messages = []
 # Set Flask application key to use session
-app.secret_key = 'secret key'
+app.secret_key = 'ilovebupt'
 
 @app.route('/')
 def home():
