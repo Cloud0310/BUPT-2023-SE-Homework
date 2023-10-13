@@ -4,3 +4,5 @@
 /**/dist
 /backend/__pycache__
 /**/pyqt-venv
+frontend/src/auto-imports.d.ts
+frontend/src/components.d.ts
