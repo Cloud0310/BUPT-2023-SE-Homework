@@ -14,7 +14,8 @@
     "path": "^0.12.7",
     "unplugin-icons": "^0.17.0",
     "vite-plugin-inspect": "^0.7.40",
-    "vue": "^3.3.4"
+    "vue": "^3.3.4",
+    "vue-router": "4"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",
