@@ -409,6 +409,57 @@ paths:
               schema:
                 $ref: "#/components/schemas/error_response"
 
+  /statistics:
+    get:
+      tags: 
+        - Data Statistics
+      summary: Get cost and income statistics within a period
+      security:
+        - sessionAuth: []
+      parameters:
+        - in: query
+          name: start_date
+          schema:
+            type: string
+            format: date
+            example: "2023-01-01"
+          required: true
+          description: Start date
+        - in: query  
+          name: end_date
+          schema:
+            type: string
+            format: date
+            example: "2023-12-31" 
+          required: true
+          description: End date
+        - in: header
+          name: X-CSRF-Token
+          schema:
+            type: string
+            example: abcde12345
+          description: CSRF token  
+      responses:
+        "200":
+          description: Get statistics successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  total_cost:
+                    type: integer
+                    example: 1000000
+                  total_income: 
+                    type: integer
+                    example: 1100000
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/error_response"
+
 components:
   securitySchemes:
     sessionAuth:
