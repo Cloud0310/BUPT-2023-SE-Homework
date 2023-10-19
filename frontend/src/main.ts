@@ -1,8 +1,8 @@
 import { createApp } from "vue";
 import "./style.css";
 import App from "./App.vue";
-import Home from "./Home.vue";
-import Devices from "./Devices.vue";
+import Home from "./routes/Home.vue";
+import Devices from "./routes/Devices.vue";
 import { createRouter, createWebHistory } from "vue-router";
 
 import * as ElementPlusIconsVue from "@element-plus/icons-vue";
