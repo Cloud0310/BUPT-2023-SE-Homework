@@ -28,8 +28,6 @@
             </div>            
             <input type="password" v-model="password" class="w-full h-10 px-4 py-3 mt-2 bg-gray-200 border rounded-lg focus:border-blue-500 focus:bg-white focus:outline-none"/>
             <i class="fa fa-eye-slash" aria-hidden="true"></i>
-            
-            <!-- <button type="button" class=" block w-full px-4 py-3 bg-indigo-100 rounded-lg text-blue focus:bg-blue-400 hover:bg-blue-400" @click="confirmlogin"> -->
           </form>
         </div>
         <div class="flex justify-center items-center mt-5 ">
@@ -41,6 +39,7 @@
     </div>
   </Teleport>
 </template>
+
 <script setup lang="ts">
 
 defineProps ({
@@ -63,8 +62,28 @@ function confirmlogin() {
     console.log("确认登录");
     isLogin.value = true;
     emits('login',isLogin.value);
+    showDialog("登录成功!欢迎使用！");
     emits('close');
+    
+  }else{
+    showDialog("登录失败!请检查用户名和密码。");
   }
 }
 
+function showDialog(message: string) {
+  const elDialog = document.createElement("div");
+  elDialog.className = "fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50 z-50";
+
+  const dialogContent = document.createElement("div");
+  dialogContent.className = "w-86 h-24 bg-white rounded-lg p-8 text-center flex justify-center items-center";
+  dialogContent.textContent = message;
+
+  elDialog.appendChild(dialogContent);
+  document.body.appendChild(elDialog);
+
+  setTimeout(() => {
+    dialogContent.remove();
+    elDialog.remove();
+  }, 1000);
+}
 </script>
