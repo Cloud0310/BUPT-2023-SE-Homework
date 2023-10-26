@@ -1,9 +1,8 @@
 import { createApp } from "vue";
 import "./style.css";
 import App from "./App.vue";
-import Home from "./Home.vue";
-import Devices from "./Devices.vue";
-import Login from "./components/Login.vue";
+import Home from "./routes/Home.vue";
+import Devices from "./routes/Devices.vue";
 import { createRouter, createWebHistory } from "vue-router";
 
 import * as ElementPlusIconsVue from "@element-plus/icons-vue";
@@ -13,7 +12,6 @@ const routes = [
     { path: "/", component: Home },
     // control devices and manually turn on/off devices
     { path: "/devices", component: Devices },
-    { path: "/login", component: Login}
 ];
 
 const router = createRouter({
