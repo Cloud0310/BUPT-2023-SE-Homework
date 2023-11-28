@@ -1,4 +1,4 @@
-## backend目录结构简介
+## backend 目录结构简介
 
 ```
 backend/
@@ -14,4 +14,4 @@ backend/
     config.py           # 配置文件
 ```
 
-> 另外，`buptse.db`和`buptse.sql`是测试用的数据库文件，目前无作用
+> 另外，`buptse.db` 和 `buptse.sql` 是测试用的数据库文件，目前无作用

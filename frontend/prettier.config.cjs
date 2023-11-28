@@ -1,4 +1,4 @@
-// prettier.config.js
+// prettier.config.cjs
 module.exports = {
   arrowParens: "avoid",
   bracketSpacing: true,
@@ -6,9 +6,10 @@ module.exports = {
   semi: true,
   printWidth: 120,
   trailingComma: "none",
+  plugins: ["prettier-plugin-tailwindcss"],
   overrides: [
     {
-      files: ["*.css", "*.ts", "*.js", "*.json"],
+      files: ["*.css", "*.ts", "*.js", "*.json", "*.cjs", "*.mjs"],
       options: {
         tabWidth: 4
       }
