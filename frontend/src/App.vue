@@ -2,7 +2,7 @@
 import { ref } from "vue";
 // import { useRouter } from 'vue-router';
 import Button from "./components/Button.vue";
-import Login from "./routes/Login.vue";
+import Login from "./components/Login.vue";
 const dateInfo = ref<Date>(new Date(Date.now()));
 
 const isLoginPannelEnabled = ref<boolean>(false);
@@ -10,7 +10,6 @@ const isLogin = ref<boolean>(false);
 function handleLogin(isLoggedIn: boolean) {
   isLogin.value = isLoggedIn;
 }
-
 
 function handleLoginClick() {
   if (!isLogin.value) {
@@ -73,7 +72,7 @@ function handleLoginClick() {
           <!-- login and logout -->
         </div>
       </div>
-      <div class="w-full flex justify-center my-5" >
+      <div class="w-full flex justify-center my-5">
         <Button @click="handleLoginClick">
           <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
             <path
@@ -84,7 +83,11 @@ function handleLoginClick() {
           <span v-if="isLogin">退出</span>
           <span v-else>登录</span>
         </Button>
-        <Login :is-login-pannel-enabled="isLoginPannelEnabled" @close="isLoginPannelEnabled = false"  @login="handleLogin"></Login>
+        <Login
+          :is-login-pannel-enabled="isLoginPannelEnabled"
+          @close="isLoginPannelEnabled = false"
+          @login="handleLogin"
+        ></Login>
       </div>
     </div>
     <div class="w-5/6 bg-neutral-100 px-16" id="content">

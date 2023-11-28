@@ -2,7 +2,7 @@
 /**/.vscode
 /**/node_modules
 /**/dist
-/backend/__pycache__
+/**/__pycache__
 /**/pyqt-venv
 frontend/src/auto-imports.d.ts
 frontend/src/components.d.ts
