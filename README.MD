@@ -22,7 +22,7 @@ TODO:
 ## Frontend Development Quick Start
 pnpm is a fast, disk space efficient package manager. You can install it using npm: `npm install -g pnpm`.
 
-Here's a list for vscode dev recommendation: [volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar), [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint), [prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode), [Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss), [vite](https://marketplace.visualstudio.com/items?itemName=antfu.vite), [AutoCorrect](https://marketplace.visualstudio.com/items?itemName=huacnlee.autocorrect).
+Here's a list for vscode dev recommendation: [volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar), [prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode), [Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss), [vite](https://marketplace.visualstudio.com/items?itemName=antfu.vite), [AutoCorrect](https://marketplace.visualstudio.com/items?itemName=huacnlee.autocorrect).
 
 Then, you install packages with `pnpm install` and run the project with `pnpm run dev`.
 

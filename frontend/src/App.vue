@@ -22,11 +22,11 @@ function handleLoginClick() {
 </script>
 
 <template>
-  <div class="h-[100vh] w-[100vw] flex">
-    <div class="w-1/6 px-12 h-full sticky flex justify-between flex-col py-5">
+  <div class="flex h-[100vh] w-[100vw]">
+    <div class="sticky flex h-full w-1/6 flex-col justify-between px-12 py-5">
       <!-- logo and title -->
       <div>
-        <div class="my-5 flex justify-center items-center gap-3 h-20">
+        <div class="my-5 flex h-20 items-center justify-center gap-3">
           <div>
             <!-- air icon from material symbols -->
             <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
@@ -36,13 +36,13 @@ function handleLoginClick() {
               />
             </svg>
           </div>
-          <div class="text-l font-bold w-fit">空调管理系统</div>
+          <div class="text-l w-fit font-bold">空调管理系统</div>
         </div>
         <!-- menu -->
         <div class="flex flex-col gap-3">
           <div>
             <router-link to="/">
-              <Button class="hover:gap-3 w-full">
+              <Button class="w-full hover:gap-3">
                 <!-- home icon from material symbols -->
                 <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
                   <path
@@ -56,7 +56,7 @@ function handleLoginClick() {
           </div>
           <div>
             <router-link to="/devices">
-              <Button class="hover:gap-3 w-full">
+              <Button class="w-full hover:gap-3">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
                   <path
                     fill="currentColor"
@@ -72,7 +72,7 @@ function handleLoginClick() {
           <!-- login and logout -->
         </div>
       </div>
-      <div class="w-full flex justify-center my-5">
+      <div class="my-5 flex w-full justify-center">
         <Button @click="handleLoginClick">
           <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
             <path
@@ -91,10 +91,10 @@ function handleLoginClick() {
       </div>
     </div>
     <div class="w-5/6 bg-neutral-100 px-16" id="content">
-      <div class="h-20 my-5 px-5 flex justify-between items-center">
-        <div class="font-bold flex flex-col justify-center gap-[0.2rem] h-full">
+      <div class="my-5 flex h-20 items-center justify-between px-5">
+        <div class="flex h-full flex-col justify-center gap-[0.2rem] font-bold">
           <div class="text-2xl">仪表板</div>
-          <div class="text-neutral-400 text-sm">
+          <div class="text-sm text-neutral-400">
             {{
               dateInfo.toLocaleTimeString("zh-CN", {
                 hour: "2-digit",

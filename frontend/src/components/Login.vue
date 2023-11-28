@@ -46,6 +46,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import { ElMessage } from "element-plus";
 
 defineProps({
   isLoginPannelEnabled: { type: Boolean, required: true }
@@ -67,10 +68,10 @@ function confirmlogin() {
     console.log("确认登录");
     isLogin.value = true;
     emits("login", isLogin.value);
-    ElMessage({ message: "登录成功!欢迎使用！", type: "success" });
+    ElMessage({ message: "登录成功！欢迎使用！", type: "success" });
     emits("close");
   } else {
-    ElMessage({ message: "登录失败!请检查用户名和密码。", type: "error" });
+    ElMessage({ message: "登录失败！请检查用户名和密码。", type: "error" });
   }
 }
 </script>

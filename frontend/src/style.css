@@ -3,12 +3,12 @@
 @tailwind utilities;
 
 @font-face {
-    font-family: 'Source Han Sans SC VF';
-    src: local('Source Han Sans SC VF'), url("/fonts/SourceHanSansSC.woff2");
+    font-family: "Source Han Sans SC VF";
+    src: local("Source Han Sans SC VF"), url("/fonts/SourceHanSansSC.woff2");
 }
 
 :root {
-    font-family: 'Source Han Sans SC VF', sans-serif;
+    font-family: "Source Han Sans SC VF", sans-serif;
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
