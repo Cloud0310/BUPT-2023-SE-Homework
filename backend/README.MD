@@ -1,5 +1,3 @@
-# 注：此分支暂停维护
-
 ## backend目录结构简介
 
 ```
@@ -102,7 +100,7 @@ sqlite3>xxx.db < xxx.sql
 - devices表：
     - room：TEXT类型，表示房间号
     - public_key：TEXT类型，表示设备的公钥
-    check_ins表：
+check_ins表：
     - room：TEXT类型，表示房间号
     - check_in_time：存储入住时间的字段，具体类型取决于你希望使用的时间表示方式
     - check_out_time：存储退房时间的字段，具体类型取决于你希望使用的时间表示方式
