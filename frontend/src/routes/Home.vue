@@ -66,11 +66,14 @@
       </el-card>
     </div>
     <el-divider />
-    <div class="flex items-center justify-center"></div>
+    <div class="flex items-center justify-center">
+      <echarts></echarts>
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+import Echarts from '../components/Echarts.vue';
 const income = ref<Number>(1919810);
 const expense = ref<Number>(114514);
 const netIncome = ref<Number>((income.value as number) - (expense.value as number));
