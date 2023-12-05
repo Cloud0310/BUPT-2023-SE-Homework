@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from "vue";
-// import { useRouter } from 'vue-router';
 import Button from "./components/Button.vue";
 import Login from "./components/Login.vue";
 const dateInfo = ref<Date>(new Date(Date.now()));
@@ -36,7 +35,7 @@ function handleLoginClick() {
               />
             </svg>
           </div>
-          <div class="text-l w-fit font-bold">空调管理系统</div>
+          <div class="w-fit text-xl font-bold">空调管理系统</div>
         </div>
         <!-- menu -->
         <div class="flex flex-col gap-3">
