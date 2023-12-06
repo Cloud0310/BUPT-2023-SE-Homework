@@ -1,69 +1,98 @@
 <template>
-  <div class="h-14 w-20 rounded shadow-sm">
+  <div class="flex flex-col justify-center rounded-xl bg-neutral-200 p-5 shadow-sm">
     <div>
-      <div id="fans"></div>
-      <el-select v-model="speed" placeholder="风速">
-        <el-option v-for="option in speedOptions" :key="option.value" :label="option.label" :value="option.value" />
-      </el-select>
+      <span class="text-lg font-bold">
+        {{ roomId }}
+      </span>
+      <div>
+        <el-switch
+          v-model="isOn"
+          @change="$emit('updateIsOn')"
+          style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+import { ElSwitch } from "element-plus";
 import P5 from "p5";
 
-let angle = 0;
-const speedOptions = [
-  { value: 1, label: "快速" },
-  { value: 2, label: "适中" },
-  { value: 3, label: "慢速" }
-];
-const speed = ref();
-new P5(
-  (p: P5) => {
-    p.setup = () => {
-      // @ts-ignore
-      p.createCanvas(200, 200, WEBGL);
-    };
-
-    p.draw = () => {
-      p.background(220);
-      p.push();
-      p.rotate(angle);
-      for (let i = 0; i < 3; i++) {
-        p.fill(255, 255, 255);
-        p.beginShape();
-        p.curveVertex(0, 0);
-        p.curveVertex(0, 0);
-        p.curveVertex(-25, -75);
-        p.curveVertex(35, -52);
-        p.curveVertex(0, 0);
-        p.curveVertex(0, 0);
-        p.endShape();
-        p.rotate((p.PI / 3) * 2);
-      }
-      p.pop();
-      angle += p.radians(speed.value);
-    };
+const props = defineProps({
+  roomId: {
+    type: String,
+    required: true
   },
-  document.getElementById("fans") as HTMLElement
-);
+  _isOn: {
+    type: Boolean
+  },
+  temperature: {
+    type: Number
+  },
+  mode: {
+    type: String
+  },
+  windSpeed: {
+    type: Number,
+    required: true
+  },
+  isWeeping: {
+    type: Boolean
+  },
+  lastUpdate: {
+    type: Date
+  }
+});
 
-enum mode {
-  cold = "制冷",
-  hot = "制热",
-  auto = "自动"
-}
+const emit = defineEmits(["updateWindSpeed", "updateIsOn"]);
+// const speedOptions = [
+//   { value: 2, label: "慢速" },
+//   { value: 5, label: "适中" },
+//   { value: 8, label: "快速" }
+// ];
 
-interface device {
-  roomId: String;
-  isOn: Boolean;
-  temperature: Number;
-  mode: mode;
-  windSpeed: Number;
-  isWeeping: Boolean;
-  lastUpdateTime: Date;
-}
+const speed = ref(props.windSpeed);
+const isOn = ref(props._isOn);
 
-const devices = ref<device[]>([]);
+let angle = 0;
+onMounted(() => {
+  new P5(
+    (p: P5) => {
+      p.setup = () => {
+        p.createCanvas(200, 200, p.WEBGL);
+      };
+
+      p.draw = () => {
+        p.background(0, 0, 0, 0);
+        p.stroke(221, 214, 254);
+        p.strokeWeight(3);
+        p.fill(237, 233, 254);
+        p.push();
+        p.rotate(angle);
+
+        for (let i = 0; i < 3; i++) {
+          // fan blades
+          p.beginShape();
+          p.curveVertex(0, 0);
+          p.curveVertex(-25, -75);
+          p.curveVertex(35, -52);
+          p.curveVertex(0, 0);
+          p.curveVertex(0, 0);
+          p.endShape(p.CLOSE);
+
+          p.rotate(p.TWO_PI / 3);
+        }
+        p.pop();
+
+        p.fill(167, 139, 250); // center circle
+        p.strokeWeight(5);
+        p.ellipse(0, 0, 30, 30);
+
+        angle += p.radians(speed.value);
+      };
+    },
+    document.getElementById(props.roomId) as HTMLElement
+  );
+});
 </script>

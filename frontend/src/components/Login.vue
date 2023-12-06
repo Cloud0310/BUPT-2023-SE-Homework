@@ -10,7 +10,13 @@
           class="absolute right-0 top-0 m-3 cursor-pointer border-none bg-transparent text-xl text-neutral-500 outline-none"
           @click="closePanel"
         >
-          <el-icon><Close /></el-icon>
+          <!-- close button -->
+          <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+            <path
+              fill="currentColor"
+              d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
+            />
+          </svg>
         </button>
         <div>
           <form action="" class="top-0 my-2 flex flex-col items-start justify-center gap-3">

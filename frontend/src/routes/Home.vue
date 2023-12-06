@@ -67,7 +67,7 @@
     </div>
     <el-divider />
     <div class="flex items-center justify-center">
-      <echarts></echarts>
+      <echarts />
     </div>
   </div>
 </template>
