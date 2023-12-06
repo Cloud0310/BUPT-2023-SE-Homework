@@ -1,8 +1,6 @@
 <template>
-  <div class="echart grid grid-cols-5 gap-4">
-    <div class="chart col-start-1 col-end-3  w-80 h-80"><v-chart :option="option1"/></div>
-    <div class="chart col-end-6 col-span-2 w-80 h-80"><v-chart :option="option2" /></div>
-  </div>
+  <v-chart :option="option1"  class="chart h-96"/>
+  <v-chart :option="option2"  class="chart h-96"/>
 </template>
 <script lang="ts" setup >
 import { use } from 'echarts/core';
@@ -18,7 +16,8 @@ import {
     MarkAreaComponent
 } from 'echarts/components';
 import VChart, { THEME_KEY } from 'vue-echarts';
-import { ref, provide} from 'vue';
+import { provide } from 'vue';
+import type { EChartsOption } from 'echarts';
 
 use([
     GridComponent,
@@ -36,23 +35,45 @@ use([
 
 provide(THEME_KEY, 'light');
 
-const option1 = ref({
-    xAxis: {
-    type: 'category',
-    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+const option1: EChartsOption ={
+  title: {
+    text: "Traffic Sources",
+    left: "center"
   },
-  yAxis: {
-    type: 'value'
+  tooltip: {
+    trigger: "item",
+    formatter: "{a} <br/>{b} : {c} ({d}%)"
+  },
+  legend: {
+    orient: "vertical",
+    left: "left",
+    data: ["Direct", "Email", "Ad Networks", "Video Ads", "Search Engines"]
   },
   series: [
     {
-      data: [150, 230, 224, 218, 135, 147, 260],
-      type: 'line'
+      name: "Traffic Sources",
+      type: "pie",
+      radius: "55%",
+      center: ["50%", "60%"],
+      data: [
+        { value: 335, name: "Direct" },
+        { value: 310, name: "Email" },
+        { value: 234, name: "Ad Networks" },
+        { value: 135, name: "Video Ads" },
+        { value: 1548, name: "Search Engines" }
+      ],
+      emphasis: {
+        itemStyle: {
+          shadowBlur: 10,
+          shadowOffsetX: 0,
+          shadowColor: "rgba(0, 0, 0, 0.5)"
+        }
+      }
     }
   ]
-});
+};
 
-const option2 = ref({
+const option2: EChartsOption ={
     title: {
     text: 'Distribution of Electricity',
     subtext: 'Fake Data'
@@ -145,5 +166,9 @@ const option2 = ref({
       }
     }
   ]
-})
+}
 </script>
+
+<style scoped>
+
+</style>
