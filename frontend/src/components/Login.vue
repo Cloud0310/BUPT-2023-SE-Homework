@@ -36,7 +36,7 @@
             />
           </form>
         </div>
-        <div class="mt-7 flex items-center justify-end">
+        <div class="mt-7 flex items-center justify-start gap-4">
           <button
             type="button"
             class="rounded-lg bg-primary-300 px-5 py-2 text-sm text-neutral-50 transition-all hover:bg-primary-400 hover:text-neutral-100"
@@ -44,6 +44,22 @@
           >
             登录
           </button>
+          <div>
+            <el-radio-group v-model="options">
+              <el-radio label="前台" />
+              <el-radio label="空调管理员" />
+            </el-radio-group>
+          </div>
+
+        </div>
+        <div class="text-right">
+          <button type="button" @click="handleRegisterClick" class="underline">注册
+          </button>
+          <Register 
+          :is-register-pannel-enabled="isRegisterPannelEnabled"
+          @close="isRegisterPannelEnabled = false"
+          @register="handleRegister"
+          ></Register>
         </div>
       </div>
     </div>
@@ -52,7 +68,8 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { ElMessage } from "element-plus";
+// import { ElMessage } from "element-plus";
+import Register from "./Register.vue";
 
 defineProps({
   isLoginPannelEnabled: { type: Boolean, required: true }
@@ -65,19 +82,34 @@ const closePanel = () => {
 
 const username = ref("");
 const password = ref("");
+const options = ref("前台");
 
 // const emitsLogin = defineEmits(['login']);
-const isLogin = ref<boolean>(false);
+const isRegister = ref<boolean>(false);
 
 function confirmlogin() {
   if (username.value === "admin" && password.value === "admin") {
     console.log("确认登录");
+    console.log(options.value)
     isLogin.value = true;
     emits("login", isLogin.value);
     ElMessage({ message: "登录成功！欢迎使用！", type: "success" });
     emits("close");
   } else {
     ElMessage({ message: "登录失败！请检查用户名和密码。", type: "error" });
+  }
+}
+const isRegisterPannelEnabled = ref<boolean>(false);
+const isLogin = ref<boolean>(false);
+function handleRegister(isregistered: boolean) {
+  isLogin.value = isregistered;
+}
+function handleRegisterClick() {
+  if (!isLogin.value) {
+    isRegisterPannelEnabled.value = true;
+    // router.push('/login');
+  } else {
+    isRegister.value = false;
   }
 }
 </script>

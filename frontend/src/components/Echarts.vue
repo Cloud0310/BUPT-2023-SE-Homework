@@ -1,6 +1,8 @@
 <template>
-  <v-chart :option="option1"  class="chart h-96"/>
-  <v-chart :option="option2"  class="chart h-96"/>
+  <div class="echarts"> Echarts
+    <div class="chart">nizaiganshenme<v-chart :option="option1"  class="chart h-96"/></div>
+    <div class="chart">nizaiganshenme<v-chart :option="option2"  class="chart h-96"/></div>
+  </div>
 </template>
 <script lang="ts" setup >
 import { use } from 'echarts/core';
@@ -15,6 +17,7 @@ import {
     VisualMapComponent,
     MarkAreaComponent
 } from 'echarts/components';
+// import { VueEcharts } from "vue3-echarts";
 import VChart, { THEME_KEY } from 'vue-echarts';
 import { provide } from 'vue';
 import type { EChartsOption } from 'echarts';

@@ -41,6 +41,9 @@ dependencies:
   vue-router:
     specifier: ^4.2.5
     version: 4.2.5(vue@3.3.10)
+  vue3-echarts:
+    specifier: ^1.1.0
+    version: 1.1.0(typescript@5.3.2)
 
 devDependencies:
   '@types/p5':
@@ -1657,6 +1660,10 @@ packages:
     resolution: {integrity: sha512-R/tCuvuOHQ8o2boRP6vgx8hXCCy87H1eY9V5imBYeVNyNVpuL9ciReSccLj2gDcax9+2weXy3bc8Vv+NRXeEvQ==}
     dev: false
 
+  /resize-observer-polyfill@1.5.1:
+    resolution: {integrity: sha512-LwZrotdHOo12nQuZlHEmtuXdqGoOD0OhaxopaNFxWzInpEgaLWoVuAMbTzixuosCx2nEG58ngzW3vxdWoxIgdg==}
+    dev: false
+
   /resolve@1.22.8:
     resolution: {integrity: sha512-oKWePCxqpd6FlLvGV1VU0x7bkPmmCNolxzjMf4NczoDnQcIWrAF+cPtZn5i6n+RfD2d9i0tzpKnG6Yk168yIyw==}
     hasBin: true
@@ -2149,6 +2156,16 @@ packages:
       semver: 7.5.4
       typescript: 5.3.2
     dev: true
+
+  /vue3-echarts@1.1.0(typescript@5.3.2):
+    resolution: {integrity: sha512-nSISmvVYHRAcD5+RX9QwITWUuduGd7pcq+zDpuI4wADpr6fAU+t4liGupbUAquEvOBfN+8XZgWjGm6RIPRq/jw==}
+    dependencies:
+      echarts: 5.4.3
+      resize-observer-polyfill: 1.5.1
+      vue: 3.3.10(typescript@5.3.2)
+    transitivePeerDependencies:
+      - typescript
+    dev: false
 
   /vue@3.3.10(typescript@5.3.2):
     resolution: {integrity: sha512-zg6SIXZdTBwiqCw/1p+m04VyHjLfwtjwz8N57sPaBhEex31ND0RYECVOC1YrRwMRmxFf5T1dabl6SGUbMKKuVw==}

@@ -89,7 +89,7 @@ function handleLoginClick() {
         ></Login>
       </div>
     </div>
-    <div class="w-5/6 bg-neutral-100 px-16" id="content">
+    <div class="w-5/6 h-fit bg-neutral-100 px-16" id="content">
       <div class="my-5 flex h-20 items-center justify-between px-5">
         <div class="flex h-full flex-col justify-center gap-[0.2rem] font-bold">
           <div class="text-2xl">仪表板</div>

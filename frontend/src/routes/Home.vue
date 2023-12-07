@@ -66,14 +66,20 @@
       </el-card>
     </div>
     <el-divider />
-    <div class="flex items-center justify-center">
-      <echarts />
+    <div class="grid grid-cols-8 gap-4">
+      <!-- <echarts /> -->
+      <div class="col-span-4"><echart2></echart2></div>
+      <div class="col-span-4"><echart1></echart1></div>
+      <!-- <echart1></echart1>
+      <echart2></echart2> -->
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import Echarts from "../components/Echarts.vue";
+// import Echarts from '../components/Echarts.vue';
+import Echart1 from '../components/Echart1.vue';
+import Echart2 from '../components/Echart2.vue'
 const income = ref<Number>(1919810);
 const expense = ref<Number>(114514);
 const netIncome = ref<Number>((income.value as number) - (expense.value as number));
