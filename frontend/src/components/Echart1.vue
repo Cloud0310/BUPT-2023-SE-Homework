@@ -1,6 +1,6 @@
 <template>
   <div class="echart">
-    <VueEcharts :option="option1" class="chart h-96"/>
+    <VueEcharts :option="option1" class="h-96"/>
 </div>
 </template>
 
@@ -19,7 +19,7 @@ import { UniversalTransition } from 'echarts/features';
 import { CanvasRenderer } from 'echarts/renderers';
 import { THEME_KEY } from 'vue-echarts';
 // import VChart from 'vue-echarts';
-import type { VueEcharts } from "vue3-echarts";
+import { VueEcharts } from "vue3-echarts";
 import { provide } from 'vue';
 import type { EChartsOption } from 'echarts';
 
