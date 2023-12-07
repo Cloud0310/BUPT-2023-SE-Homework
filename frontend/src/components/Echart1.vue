@@ -19,7 +19,7 @@ import { UniversalTransition } from 'echarts/features';
 import { CanvasRenderer } from 'echarts/renderers';
 import { THEME_KEY } from 'vue-echarts';
 // import VChart from 'vue-echarts';
-import { VueEcharts } from "vue3-echarts";
+import type { VueEcharts } from "vue3-echarts";
 import { provide } from 'vue';
 import type { EChartsOption } from 'echarts';
 
