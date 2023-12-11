@@ -20,7 +20,7 @@
       </div>
       <div class="grow" />
       <div class="text-sm">
-        <div class="my-1">
+        <div class="mb-1">
           <img src="/images/icons/mode_heat_cool.svg" alt="模式" class="mr-2 inline-block h-6 w-6" />
           <!-- <span class="mr-2 inline-block align-middle text-xs">模式</span> -->
           <el-select v-model="currentMode" size="small" style="width: 60px">
@@ -32,7 +32,7 @@
             </el-option>
           </el-select>
         </div>
-        <div class="my-1">
+        <div class="mt-1">
           <img src="/images/icons/sweep.svg" alt="扫风" class="mr-2 inline-block h-6 w-6" />
           <el-switch v-model="sweeping" inlinePrompt :activeIcon="Check" :inactiveIcon="Close" />
         </div>
@@ -45,7 +45,7 @@
           @click="() => (on = !on)"
           class="h-11 w-11 rounded-full border border-transparent bg-neutral-100 p-2 transition-colors"
           :class="{
-            'text-primary-500': on,
+            'text-primary-400': on,
             'text-neutral-500': !on,
             'hover:text-primary-300': !on
           }"
@@ -62,31 +62,17 @@
     <div class="my-3 h-[1px] w-full bg-neutral-300" />
     <div>
       <!-- TODO: temperature display -->
-      <div class="flex justify-start">
-        <div>
+      <div class="inline-block">
+        <div class="inline-block w-24 align-bottom">
           <span class="text-6xl font-bold text-[#49454e]">{{ temperature }}</span>
           <span class="text-2xl text-[#1c1b1e]">℃</span>
         </div>
-        <div>
-          <button type="button">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" class="h-6 w-6">
-              <path
-                d="M680-520v-120H560v-80h120v-120h80v120h120v80H760v120h-80ZM320-120q-83 0-141.5-58.5T120-320q0-48 21-89.5t59-70.5v-240q0-50 35-85t85-35q50 0 85 35t35 85v240q38 29 59 70.5t21 89.5q0 83-58.5 141.5T320-120Zm-40-440h80v-160q0-17-11.5-28.5T320-760q-17 0-28.5 11.5T280-720v160Z"
-              />
-            </svg>
-          </button>
-          <button type="button">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" class="h-6 w-6">
-              <path
-                fill="currentColor"
-                d="M880-640H560v-80h320v80ZM320-120q-83 0-141.5-58.5T120-320q0-48 21-89.5t59-70.5v-240q0-50 35-85t85-35q50 0 85 35t35 85v240q38 29 59 70.5t21 89.5q0 83-58.5 141.5T320-120Zm0-80q50 0 85-35t35-85q0-29-12.5-54T392-416l-32-24v-280q0-17-11.5-28.5T320-760q-17 0-28.5 11.5T280-720v280l-32 24q-23 17-35.5 42T200-320q0 50 35 85t85 35Zm0-120Z"
-              />
-            </svg>
-          </button>
+        <div class="mr-10 inline-block h-[150px]">
+          <el-slider v-model="temperature" vertical :max="35" :min="0" :marks="marks" placement="right"></el-slider>
         </div>
       </div>
       <!-- TODO: wind speed display-->
-      <div></div>
+      <div :id="roomId" class="inline-block" />
     </div>
     <!-- TODO: last update time -->
     <div></div>
@@ -95,32 +81,12 @@
 
 <script lang="ts" setup>
 import { Check, Close } from "@element-plus/icons-vue";
-
-// import P5 from "p5";
+import P5 from "p5";
 
 const props = defineProps({
   roomId: {
     type: String,
     required: true
-  },
-  isOn: {
-    type: Boolean
-  },
-  temperature: {
-    type: Number
-  },
-  mode: {
-    type: String
-  },
-  windSpeed: {
-    type: Number,
-    required: true
-  },
-  isWeeping: {
-    type: Boolean
-  },
-  lastUpdate: {
-    type: Date
   }
 });
 
@@ -139,51 +105,109 @@ const modeOptions = [
   }
 ];
 
-const sweeping = ref(props.isWeeping);
-const currentMode = ref(props.mode);
-const on = ref(props.isOn);
-// console.log(props);
-// const isOn = ref(props._isOn);
+const marks = {
+  10: "10℃",
+  20: "20℃"
+};
 
-// const speed = ref(props.windSpeed);
-// let angle = 0;
-// onMounted(() => {
-//   new P5(
-//     (p: P5) => {
-//       p.setup = () => {
-//         p.createCanvas(200, 200, p.WEBGL);
-//       };
+interface roomStatus {
+  roomId: number;
+  isOn: boolean;
+  temperature: number;
+  mode: string;
+  windSpeed: number;
+  isWeeping: boolean;
+  lastUpdate: Date;
+}
 
-//       p.draw = () => {
-//         p.background(0, 0, 0, 0);
-//         p.stroke(221, 214, 254);
-//         p.strokeWeight(3);
-//         p.fill(237, 233, 254);
-//         p.push();
-//         p.rotate(angle);
+function getRoomStatus(
+  csrfToken: string,
+  roomId: string,
+  onSuccess: (s: roomStatus) => void,
+  onError: (e: string) => void
+) {
+  csrfToken;
+  roomId;
+  const s = {
+    roomId: 114,
+    isOn: true,
+    temperature: 25,
+    mode: "cool",
+    windSpeed: 2,
+    isWeeping: false,
+    lastUpdate: new Date()
+  };
+  onSuccess(s);
+  onError("failed");
+}
 
-//         for (let i = 0; i < 3; i++) {
-//           // fan blades
-//           p.beginShape();
-//           p.curveVertex(0, 0);
-//           p.curveVertex(-25, -75);
-//           p.curveVertex(35, -52);
-//           p.curveVertex(0, 0);
-//           p.curveVertex(0, 0);
-//           p.endShape(p.CLOSE);
+const currentMode = ref("cool");
+const sweeping = ref(false);
+const temperature = ref(25);
+const on = ref(true);
+const fansSpeed = ref(1);
 
-//           p.rotate(p.TWO_PI / 3);
-//         }
-//         p.pop();
+function updateRoomStatus() {
+  getRoomStatus(
+    "csrfToken",
+    props.roomId,
+    s => {
+      currentMode.value = s.mode;
+      sweeping.value = s.isWeeping;
+      temperature.value = s.temperature;
+      on.value = s.isOn;
+    },
+    () => {}
+  );
+}
 
-//         p.fill(167, 139, 250); // center circle
-//         p.strokeWeight(5);
-//         p.ellipse(0, 0, 30, 30);
+let intervalId = 0;
+intervalId;
 
-//         angle += p.radians(speed.value);
-//       };
-//     },
-//     document.getElementById(props.roomId) as HTMLElement
-//   );
-// });
+let angle = 0;
+let buffer: P5.Graphics;
+onMounted(() => {
+  updateRoomStatus();
+  // intervalId = setInterval(updateRoomStatus, 5000);
+  new P5(
+    (p: P5) => {
+      p.setup = () => {
+        p.createCanvas(150, 150, p.WEBGL);
+        buffer = p.createGraphics(150, 150, p.WEBGL);
+        buffer.background(0, 0, 0, 0);
+        buffer.fill(167, 139, 250);
+        buffer.stroke(221, 214, 254);
+        buffer.strokeWeight(3);
+        buffer.ellipse(0, 0, 18, 18);
+      };
+
+      p.draw = () => {
+        // p.background(0, 0, 0, 0);
+        p.clear(0, 0, 0, 0);
+        p.stroke(221, 214, 254);
+        p.strokeWeight(2);
+        p.fill(237, 233, 254);
+        p.push();
+        p.rotate(angle);
+
+        for (let i = 0; i < 3; i++) {
+          // fan blades
+          p.beginShape();
+          p.vertex(0, 0);
+          p.bezierVertex(-40, -80, 40, -80, 0, 0);
+          p.endShape(p.CLOSE);
+          p.rotate(p.TWO_PI / 3);
+        }
+        p.pop();
+        angle += p.radians(fansSpeed.value);
+        p.image(buffer, -75, -75);
+      };
+    },
+    document.getElementById(props.roomId) as HTMLElement
+  );
+});
+
+onUnmounted(() => {
+  // clearInterval(intervalId);
+});
 </script>
