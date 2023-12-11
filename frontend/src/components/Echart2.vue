@@ -1,66 +1,66 @@
 <template>
-    <div class="echart">
-      <VueEcharts :option="option2" class="h-96"/>
-  </div>
-</template>
+    <v-chart class="chart h-96" :option="option" autoresize />
+  </template>
   
-<script lang="ts" setup>
-import { use } from 'echarts/core';
-import {
-  TitleComponent,
-  TooltipComponent,
-  LegendComponent
-} from 'echarts/components';
-import { PieChart } from 'echarts/charts';
-import { LabelLayout } from 'echarts/features';
-import { CanvasRenderer } from 'echarts/renderers';
-import { VueEcharts } from "vue3-echarts";
-import { THEME_KEY } from 'vue-echarts';
-import { provide } from 'vue';
-import type { EChartsOption } from 'echarts';
-use([
-  TitleComponent,
-  TooltipComponent,
-  LegendComponent,
-  PieChart,
-  CanvasRenderer,
-  LabelLayout
-]);
+  <script lang="ts" setup>
+  import { use } from 'echarts/core';
+  import { CanvasRenderer } from 'echarts/renderers';
+  import { PieChart } from 'echarts/charts';
+  import type { EChartsOption } from 'echarts';
 
-provide(THEME_KEY, 'light');
-const option2: EChartsOption ={
+  import {
+    TitleComponent,
+    TooltipComponent,
+    LegendComponent,
+  } from 'echarts/components';
+  import VChart, { THEME_KEY } from 'vue-echarts';
+  import { ref, provide } from 'vue';
+  
+  use([
+    CanvasRenderer,
+    PieChart,
+    TitleComponent,
+    TooltipComponent,
+    LegendComponent,
+  ]);
+  
+  provide(THEME_KEY, 'light');
+  
+  const option = ref<EChartsOption>({
     title: {
-        text: 'Referer of a Website',
-        subtext: 'Fake Data',
-        left: 'center'
+      text: 'Traffic Sources',
+      left: 'center',
     },
     tooltip: {
-        trigger: 'item'
+      trigger: 'item',
+      formatter: '{a} <br/>{b} : {c} ({d}%)',
     },
     legend: {
-        orient: 'vertical',
-        left: 'left'
+      orient: 'vertical',
+      left: 'left',
+      data: ['Direct', 'Email', 'Ad Networks', 'Video Ads', 'Search Engines'],
     },
     series: [
-        {
-        name: 'Access From',
+      {
+        name: 'Traffic Sources',
         type: 'pie',
-        radius: '50%',
+        radius: '55%',
+        center: ['50%', '60%'],
         data: [
-            { value: 1048, name: 'Search Engine' },
-            { value: 735, name: 'Direct' },
-            { value: 580, name: 'Email' },
-            { value: 484, name: 'Union Ads' },
-            { value: 300, name: 'Video Ads' }
+          { value: 335, name: 'Direct' },
+          { value: 310, name: 'Email' },
+          { value: 234, name: 'Ad Networks' },
+          { value: 135, name: 'Video Ads' },
+          { value: 1548, name: 'Search Engines' },
         ],
         emphasis: {
-            itemStyle: {
+          itemStyle: {
             shadowBlur: 10,
             shadowOffsetX: 0,
-            shadowColor: 'rgba(0, 0, 0, 0.5)'
-            }
-        }
-        }
-    ]
-}
-</script>
+            shadowColor: 'rgba(0, 0, 0, 0.5)',
+          },
+        },
+      },
+    ],
+  });
+  </script>
