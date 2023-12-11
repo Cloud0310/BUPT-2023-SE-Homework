@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import Button from "./components/Button.vue";
 import Login from "./components/Login.vue";
-const dateInfo = ref<Date>(new Date(Date.now()));
+// const dateInfo = ref<Date>(new Date(Date.now()));
 
 const isLoginPannelEnabled = ref<boolean>(false);
 const isLogin = ref<boolean>(false);
@@ -22,7 +22,7 @@ function handleLoginClick() {
 
 <template>
   <div class="flex h-[100vh] w-[100vw]">
-    <div class="sticky flex h-full w-1/6 flex-col justify-between px-12 py-5">
+    <div class="sticky flex h-full w-1/6 min-w-fit shrink-0 flex-col justify-between px-12 py-5">
       <!-- logo and title -->
       <div>
         <div class="my-5 flex h-20 items-center justify-center gap-3">
@@ -89,8 +89,8 @@ function handleLoginClick() {
         ></Login>
       </div>
     </div>
-    <div class="w-5/6 h-fit bg-neutral-100 px-16" id="content">
-      <div class="my-5 flex h-20 items-center justify-between px-5">
+    <div class="h-full w-5/6 overflow-y-scroll bg-neutral-100 px-16" id="content">
+      <!-- <div class="my-5 flex h-20 items-center justify-between px-5">
         <div class="flex h-full flex-col justify-center gap-[0.2rem] font-bold">
           <div class="text-2xl">仪表板</div>
           <div class="text-sm text-neutral-400">
@@ -104,7 +104,6 @@ function handleLoginClick() {
         </div>
         <div class="flex items-center justify-evenly gap-3">
           <div>
-            <!-- avatar icon -->
             <svg xmlns="http://www.w3.org/2000/svg" height="40" viewBox="0 -960 960 960" width="40">
               <path
                 fill="currentColor"
@@ -114,7 +113,7 @@ function handleLoginClick() {
           </div>
           <div class="text-xl font-bold">Cloud Liu</div>
         </div>
-      </div>
+      </div> -->
       <router-view />
     </div>
   </div>

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex gap-3">
+  <div class="flex flex-wrap gap-3">
     <DeviceStatusCard
       v-for="device in devices"
       :roomId="device.roomId"
@@ -11,7 +11,7 @@
       :lastUpdate="device.lastUpdate"
       @update-wind-speed="(n: number) => (device.windSpeed = n)"
       @update-is-on="() => console.log(device.isOn)"
-      class="grow basis-1/3"
+      class="alid min-w-[calc(33%-0.375rem)] shrink-0"
     />
   </div>
 </template>
@@ -27,7 +27,7 @@ enum mode {
 
 const devices = ref([
   {
-    roomId: "1",
+    roomId: "114",
     isOn: true,
     temperature: 25,
     mode: mode.cold,
@@ -36,7 +36,7 @@ const devices = ref([
     lastUpdate: new Date()
   },
   {
-    roomId: "2",
+    roomId: "514",
     isOn: false,
     temperature: 25,
     mode: mode.hot,
@@ -45,11 +45,47 @@ const devices = ref([
     lastUpdate: new Date()
   },
   {
-    roomId: "3",
+    roomId: "191",
     isOn: true,
     temperature: 25,
     mode: mode.auto,
     windSpeed: 8,
+    isWeeping: false,
+    lastUpdate: new Date()
+  },
+  {
+    roomId: "114",
+    isOn: true,
+    temperature: 25,
+    mode: mode.cold,
+    windSpeed: 2,
+    isWeeping: false,
+    lastUpdate: new Date()
+  },
+  {
+    roomId: "514",
+    isOn: false,
+    temperature: 25,
+    mode: mode.hot,
+    windSpeed: 5,
+    isWeeping: false,
+    lastUpdate: new Date()
+  },
+  {
+    roomId: "191",
+    isOn: true,
+    temperature: 25,
+    mode: mode.auto,
+    windSpeed: 8,
+    isWeeping: false,
+    lastUpdate: new Date()
+  },
+  {
+    roomId: "114",
+    isOn: true,
+    temperature: 25,
+    mode: mode.cold,
+    windSpeed: 2,
     isWeeping: false,
     lastUpdate: new Date()
   }
