@@ -1,48 +1,48 @@
 <template>
-    <v-chart class="chart h-96" :option="option" autoresize />
-  </template>
-  
-  <script lang="ts" setup>
-  import { use } from 'echarts/core';
-  import { CanvasRenderer } from 'echarts/renderers';
-  import { LineChart } from 'echarts/charts';
-  import { UniversalTransition } from 'echarts/features';
-  import type { EChartsOption } from 'echarts';
+  <v-chart class="chart h-96" :option="option as EChartsOption" autoresize />
+</template>
 
-  import {
-    TitleComponent,
-    ToolboxComponent,
-    TooltipComponent,
-    GridComponent,
-    VisualMapComponent,
-    MarkAreaComponent
-  } from 'echarts/components';
-  import VChart, { THEME_KEY } from 'vue-echarts';
-  import { ref, provide } from 'vue';
-  
-  use([
-    TitleComponent,
-    ToolboxComponent,
-    TooltipComponent,
-    GridComponent,
-    VisualMapComponent,
-    MarkAreaComponent,
-    LineChart,
-    CanvasRenderer,
-    UniversalTransition
-  ]);
-  
-  provide(THEME_KEY, 'light');
-  
-  const option = ref<EChartsOption>({
-    title: {
-    text: 'Distribution of Electricity',
-    subtext: 'Fake Data'
+<script lang="ts" setup>
+import { use } from "echarts/core";
+import { CanvasRenderer } from "echarts/renderers";
+import { LineChart } from "echarts/charts";
+import { UniversalTransition } from "echarts/features";
+import type { EChartsOption } from "echarts";
+
+import {
+  TitleComponent,
+  ToolboxComponent,
+  TooltipComponent,
+  GridComponent,
+  VisualMapComponent,
+  MarkAreaComponent
+} from "echarts/components";
+import VChart, { THEME_KEY } from "vue-echarts";
+import { ref, provide } from "vue";
+
+use([
+  TitleComponent,
+  ToolboxComponent,
+  TooltipComponent,
+  GridComponent,
+  VisualMapComponent,
+  MarkAreaComponent,
+  LineChart,
+  CanvasRenderer,
+  UniversalTransition
+]);
+
+provide(THEME_KEY, "light");
+
+const option = ref<EChartsOption>({
+  title: {
+    text: "Distribution of Electricity",
+    subtext: "Fake Data"
   },
   tooltip: {
-    trigger: 'axis',
+    trigger: "axis",
     axisPointer: {
-      type: 'cross'
+      type: "cross"
     }
   },
   toolbox: {
@@ -52,15 +52,15 @@
     }
   },
   xAxis: {
-    type: 'category',
+    type: "category",
     boundaryGap: false,
     // prettier-ignore
     data: ['00:00', '01:15', '02:30', '03:45', '05:00', '06:15', '07:30', '08:45', '10:00', '11:15', '12:30', '13:45', '15:00', '16:15', '17:30', '18:45', '20:00', '21:15', '22:30', '23:45']
   },
   yAxis: {
-    type: 'value',
+    type: "value",
     axisLabel: {
-      formatter: '{value} W'
+      formatter: "{value} W"
     },
     axisPointer: {
       snap: true
@@ -72,64 +72,62 @@
     pieces: [
       {
         lte: 6,
-        color: 'green'
+        color: "green"
       },
       {
         gt: 6,
         lte: 8,
-        color: 'red'
+        color: "red"
       },
       {
         gt: 8,
         lte: 14,
-        color: 'green'
+        color: "green"
       },
       {
         gt: 14,
         lte: 17,
-        color: 'red'
+        color: "red"
       },
       {
         gt: 17,
-        color: 'green'
+        color: "green"
       }
     ]
   },
   series: [
     {
-      name: 'Electricity',
-      type: 'line',
+      name: "Electricity",
+      type: "line",
       smooth: true,
       // prettier-ignore
       data: [300, 280, 250, 260, 270, 300, 550, 500, 400, 390, 380, 390, 400, 500, 600, 750, 800, 700, 600, 400],
       markArea: {
         itemStyle: {
-          color: 'rgba(255, 173, 177, 0.4)'
+          color: "rgba(255, 173, 177, 0.4)"
         },
         data: [
           [
             {
-              name: 'Morning Peak',
-              xAxis: '07:30'
+              name: "Morning Peak",
+              xAxis: "07:30"
             },
             {
-              xAxis: '10:00'
+              xAxis: "10:00"
             }
           ],
           [
             {
-              name: 'Evening Peak',
-              xAxis: '17:30'
+              name: "Evening Peak",
+              xAxis: "17:30"
             },
             {
-              xAxis: '21:15'
+              xAxis: "21:15"
             }
           ]
         ]
       }
     }
   ]
-  });
-  </script>
-
-  
+});
+</script>

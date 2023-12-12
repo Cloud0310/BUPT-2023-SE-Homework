@@ -36,8 +36,8 @@ dependencies:
     specifier: ^3.3.11
     version: 3.3.11(typescript@5.3.3)
   vue-echarts:
-    specifier: ^6.6.2
-    version: 6.6.2(echarts@5.4.3)(vue@3.3.11)
+    specifier: ^6.6.3
+    version: 6.6.3(echarts@5.4.3)(vue@3.3.11)
   vue-router:
     specifier: ^4.2.5
     version: 4.2.5(vue@3.3.11)
@@ -766,7 +766,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001568
-      electron-to-chromium: 1.4.609
+      electron-to-chromium: 1.4.610
       node-releases: 2.0.14
       update-browserslist-db: 1.0.13(browserslist@4.22.2)
     dev: true
@@ -889,8 +889,8 @@ packages:
       zrender: 5.4.4
     dev: false
 
-  /electron-to-chromium@1.4.609:
-    resolution: {integrity: sha512-ihiCP7PJmjoGNuLpl7TjNA8pCQWu09vGyjlPYw1Rqww4gvNuCcmvl+44G+2QyJ6S2K4o+wbTS++Xz0YN8Q9ERw==}
+  /electron-to-chromium@1.4.610:
+    resolution: {integrity: sha512-mqi2oL1mfeHYtOdCxbPQYV/PL7YrQlxbvFEZ0Ee8GbDdShimqt2/S6z2RWqysuvlwdOrQdqvE0KZrBTipAeJzg==}
     dev: true
 
   /element-plus@2.4.3(vue@3.3.11):
@@ -2120,8 +2120,8 @@ packages:
       vue: 3.3.11(typescript@5.3.3)
     dev: false
 
-  /vue-echarts@6.6.2(echarts@5.4.3)(vue@3.3.11):
-    resolution: {integrity: sha512-Lyb8O33W7/jk6KLeCy77kwLCVpiadNCXFjEQ20t70HRE0DxrrkZ3t6iDmvdAw2JlBy83r9UKZhHjVL6R4ov55A==}
+  /vue-echarts@6.6.3(echarts@5.4.3)(vue@3.3.11):
+    resolution: {integrity: sha512-ogeMZ88QV62h+6Rmfi1ZAScKGX0TrCESTtoSUDNanrVH3lsvquVGNb43805J6pVhNqsgXXf4b5oweFjRw1Mqlw==}
     requiresBuild: true
     peerDependencies:
       '@vue/composition-api': ^1.0.5
