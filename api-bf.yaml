@@ -6,11 +6,11 @@ info:
   version: 1.0.0
 
 servers:
-  - url: "http://localhost:11451/api"
+  - url: 'http://localhost:11451/api'
     description: Local server
 
 security:
-  - sessionAuth: []
+  - sessionAuth: [ ]
 
 paths:
   /login:
@@ -38,7 +38,7 @@ paths:
                   type: string
                   example: admin
       responses:
-        "200":
+        '200':
           description: Login successfully
           headers:
             Set-Cookie:
@@ -56,18 +56,24 @@ paths:
                   csrf_token: # Optional: anti-CSRF token
                     type: string
                     example: abcde12345
-        "401":
+                  role:
+                    type: string
+                    enum:
+                      - manager
+                      - checkout
+                      - AC admin
+        '401':
           description: Login failed
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/error_response"
+                $ref: '#/components/schemas/error_response'
   /logout:
     post:
       tags:
         - Authorization
       security:
-        - sessionAuth: []
+        - sessionAuth: [ ]
       parameters:
         - in: header
           name: X-CSRF-Token
@@ -77,19 +83,19 @@ paths:
           description: CSRF token
       summary: Logout
       responses:
-        "204":
+        '204':
           description: Logout successfully
           headers:
             Set-Cookie:
               schema:
                 type: string
                 example: session=; Path=/
-        "401":
+        '401':
           description: Not logged in
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/error_response"
+                $ref: '#/components/schemas/error_response'
 
   /admin/device:
     put:
@@ -97,7 +103,7 @@ paths:
         - Administrate
       summary: Add device
       security:
-        - sessionAuth: []
+        - sessionAuth: [ ]
       parameters:
         - in: header
           name: X-CSRF-Token
@@ -117,7 +123,7 @@ paths:
                 public_key:
                   type: string # RSA 4096
       responses:
-        "200":
+        '200':
           description: Add device successfully
           content:
             application/json:
@@ -127,18 +133,18 @@ paths:
                   room:
                     type: string
                     example: 2-233 # same as the input
-        "401":
+        '401':
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/error_response"
+                $ref: '#/components/schemas/error_response'
     delete:
       tags:
         - Administrate
       summary: Remove device
       security:
-        - sessionAuth: []
+        - sessionAuth: [ ]
       parameters:
         - in: header
           name: X-CSRF-Token
@@ -156,7 +162,7 @@ paths:
                   type: string
                   example: 2-233
       responses:
-        "200":
+        '200':
           description: Remove device successfully
           content:
             application/json:
@@ -166,19 +172,19 @@ paths:
                   room:
                     type: string
                     example: 2-233 # same as the input
-        "401":
+        '401':
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/error_response"
+                $ref: '#/components/schemas/error_response'
   /admin/devices:
     get:
       tags:
         - Administrate
       summary: Get all available devices
       security:
-        - sessionAuth: []
+        - sessionAuth: [ ]
       parameters:
         - in: header
           name: X-CSRF-Token
@@ -187,7 +193,7 @@ paths:
             example: abcde12345 # Optional: anti-CSRF token
           description: CSRF token
       responses:
-        "200":
+        '200':
           description: Get devices successfully
           content:
             application/json:
@@ -196,19 +202,19 @@ paths:
                 items:
                   type: string
                   example: 2-233
-        "401":
+        '401':
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/error_response"
+                $ref: '#/components/schemas/error_response'
   /admin/device/{room_id}:
     post:
       tags:
         - Administrate
       summary: Control device
       security:
-        - sessionAuth: []
+        - sessionAuth: [ ]
       parameters:
         - in: path
           name: room_id
@@ -227,9 +233,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/request_entry"
+              $ref: '#/components/schemas/request_entry'
       responses:
-        "200":
+        '200':
           description: Control successfully
           content:
             application/json:
@@ -238,12 +244,12 @@ paths:
                 items:
                   type: string
                   example: 2-233
-        "401":
+        '401':
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/error_response"
+                $ref: '#/components/schemas/error_response'
 
   /status/{room_id}:
     get:
@@ -251,7 +257,7 @@ paths:
         - Data Query
       summary: Get status of a device
       security:
-        - sessionAuth: []
+        - sessionAuth: [ ]
       parameters:
         - in: path
           name: room_id
@@ -267,7 +273,7 @@ paths:
             example: abcde12345 # Optional: anti-CSRF token
           description: CSRF token
       responses:
-        "200":
+        '200':
           description: Get status successfully
           content:
             application/json:
@@ -302,19 +308,19 @@ paths:
                     type: string
                     example: 2023-09-18T11:45:14+08:00 # ISO 8601
                     required: true
-        "401":
+        '401':
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/error_response"
+                $ref: '#/components/schemas/error_response'
   /status:
     get:
       tags:
         - Data Query
       summary: Get status of all devices
       security:
-        - sessionAuth: []
+        - sessionAuth: [ ]
       parameters:
         - in: header
           name: X-CSRF-Token
@@ -323,7 +329,7 @@ paths:
             example: abcde12345 # Optional: anti-CSRF token
           description: CSRF token
       responses:
-        "200":
+        '200':
           description: Get status successfully
           content:
             application/json:
@@ -338,12 +344,12 @@ paths:
                     is_on:
                       type: boolean
                       example: true
-        "401":
+        '401':
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/error_response"
+                $ref: '#/components/schemas/error_response'
 
   /room/check_in:
     post:
@@ -351,7 +357,7 @@ paths:
         - Room
       summary: Check-in a room
       security:
-        - sessionAuth: []
+        - sessionAuth: [ ]
       parameters:
         - in: header
           name: X-CSRF-Token
@@ -370,7 +376,7 @@ paths:
                   example: 2-233
                   required: true
       responses:
-        "200":
+        '200':
           description: Check-in successfully
           content:
             application/json:
@@ -381,19 +387,19 @@ paths:
                     type: string
                     example: 2-233 # same as the input
                     required: true
-        "401":
+        '401':
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/error_response"
+                $ref: '#/components/schemas/error_response'
   /room/check_out:
     post:
       tags:
         - Room
       summary: Check-out a room
       security:
-        - sessionAuth: []
+        - sessionAuth: [ ]
       parameters:
         - in: header
           name: X-CSRF-Token
@@ -412,7 +418,7 @@ paths:
                   example: 2-233
                   required: true
       responses:
-        "200":
+        '200':
           description: Check-out successfully
           content:
             application/json:
@@ -424,13 +430,13 @@ paths:
                     example: 2-233 # same as the input
                     required: true
                   report:
-                    $ref: "#/components/schemas/report_data"
-        "401":
+                    $ref: '#/components/schemas/report_data'
+        '401':
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/error_response"
+                $ref: '#/components/schemas/error_response'
 
 components:
   securitySchemes:
