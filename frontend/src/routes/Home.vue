@@ -78,11 +78,11 @@
 
 <script lang="ts" setup>
 // import Echarts from '../components/Echarts.vue';
-import Echart1 from '../components/Echart1.vue';
-import Echart2 from '../components/Echart2.vue'
-const income = ref<Number>(1919810);
-const expense = ref<Number>(114514);
-const netIncome = ref<Number>((income.value as number) - (expense.value as number));
+import Echart1 from "../components/Echart1.vue";
+import Echart2 from "../components/Echart2.vue";
+const income = ref<number>(1919810);
+const expense = ref<number>(114514);
+const netIncome = ref<number>((income.value as number) - (expense.value as number));
 </script>
 
 <style scoped>

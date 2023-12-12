@@ -1,4 +1,5 @@
 <template>
+  <PageHeader page-title="设备" />
   <div class="flex flex-wrap gap-3">
     <div
       class="flex h-[370px] min-w-[max(calc(33%-0.375rem),400px)] shrink-0 items-center justify-center rounded-xl bg-[#fffbffb5] p-2 drop-shadow-lg"
@@ -30,6 +31,7 @@
 </template>
 
 <script lang="ts" setup>
+import PageHeader from "../components/PageHeader.vue";
 import DeviceStatusCard from "../components/DeviceStatusCard.vue";
 
 const roomIDs = ref<string[]>(["1-114", "5-514", "1-191", "1-115", "5-513", "1-192", "1-119"]);

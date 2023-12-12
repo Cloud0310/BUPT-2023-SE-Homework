@@ -63,9 +63,14 @@
     <div class="flex h-full justify-between">
       <!-- temperature display -->
       <div class="inline-block">
-        <div class="inline-block w-24 align-bottom">
-          <span class="text-6xl font-bold text-[#49454e]">{{ temperature }}</span>
-          <span class="text-2xl text-[#1c1b1e]">℃</span>
+        <div
+          class="inline-block w-24 align-bottom"
+          :style="{
+            color: temperatureToHSL(temperature)
+          }"
+        >
+          <span class="text-6xl font-bold">{{ temperature }}</span>
+          <span class="text-2xl">℃</span>
         </div>
         <div class="mr-10 inline-block h-[150px]">
           <el-slider v-model="temperature" vertical :max="35" :min="0" :marks="marks" placement="right"></el-slider>
@@ -90,7 +95,7 @@
         </div>
       </div>
     </div>
-    <!-- TODO: last update time -->
+    <!-- last update time -->
     <div class="flex justify-end">
       <span class="text-xs text-neutral-500"
         >最后更新于
@@ -172,6 +177,8 @@ function getRoomStatus(
 const currentMode = ref("cool");
 const sweeping = ref(false);
 const temperature = ref(25);
+const minTemperature = 0;
+const maxTemperature = 35;
 const on = ref(true);
 const fanSpeed = ref(1);
 const lastUpdate = ref(new Date());
@@ -188,6 +195,11 @@ function updateRoomStatus() {
     },
     () => {}
   );
+}
+
+function temperatureToHSL(temp: number) {
+  const hue = 240 + ((temp - minTemperature) / (maxTemperature - minTemperature)) * 120;
+  return `hsl(${hue}, 75%, 70%)`;
 }
 
 let intervalId = 0;
