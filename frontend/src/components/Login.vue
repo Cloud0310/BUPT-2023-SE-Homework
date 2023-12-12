@@ -44,12 +44,12 @@
           >
             登录
           </button>
-          <div>
+          <!-- <div>
             <el-radio-group v-model="options">
               <el-radio label="前台" />
               <el-radio label="空调管理员" />
             </el-radio-group>
-          </div>
+          </div> -->
 
         </div>
         <div class="text-right">

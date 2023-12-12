@@ -21,6 +21,7 @@ declare module 'vue' {
     ElSlider: typeof import('element-plus/es')['ElSlider']
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
     Login: typeof import('./components/Login.vue')['default']
+    RegistDevice: typeof import('./components/RegistDevice.vue')['default']
     Register: typeof import('./components/Register.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
