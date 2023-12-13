@@ -2,7 +2,7 @@
   <PageHeader page-title="设备" />
   <div class="flex flex-wrap gap-3">
     <div
-      class="flex h-[370px] min-w-[max(calc(33%-0.375rem),400px)] shrink-0 items-center justify-center rounded-xl bg-[#fffbffb5] p-2 drop-shadow-lg"
+      class="flex h-[370px] flex-1 shrink-0 grow basis-[max(calc(33%-0.375rem),400px)] items-center justify-center rounded-xl bg-[#fffbffb5] p-2 drop-shadow-lg"
     >
       <button type="button" @click="addDeviceDialogVisible = true" class="h-full w-full">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" class="mx-auto h-24 w-24 text-neutral-300">
@@ -14,7 +14,7 @@
       v-for="(roomId, index) in roomIDs"
       :roomId="roomId"
       :key="index"
-      class="h-[370px] min-w-[calc(33%-0.375rem)] shrink-0 bg-[#fffbff] drop-shadow-lg"
+      class="h-[370px] shrink-0 grow basis-[max(calc(33%-0.375rem),400px)] bg-[#fffbff] drop-shadow-lg"
     />
   </div>
   <el-dialog v-model="addDeviceDialogVisible" title="添加设备" style="--el-border-radius-small: 0.75rem">

@@ -1,4 +1,5 @@
 <template>
+  <PageHeader page-title="首页" />
   <div class="flex flex-col gap-4">
     <!-- card infomation -->
     <div class="flex justify-between gap-4">
@@ -80,6 +81,7 @@
 // import Echarts from '../components/Echarts.vue';
 import Echart1 from "../components/Echart1.vue";
 import Echart2 from "../components/Echart2.vue";
+import PageHeader from "../components/PageHeader.vue";
 const income = ref<number>(1919810);
 const expense = ref<number>(114514);
 const netIncome = ref<number>((income.value as number) - (expense.value as number));

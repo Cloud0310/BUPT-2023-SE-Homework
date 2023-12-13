@@ -78,7 +78,7 @@
       </div>
       <!-- wind speed display-->
       <div class="inline-block">
-        <div :id="roomId" />
+        <div :id="roomId" class="flex justify-end" />
         <div>
           <div class="mr-3 inline-block h-6 w-6 align-middle">
             <!-- fan icon -->
