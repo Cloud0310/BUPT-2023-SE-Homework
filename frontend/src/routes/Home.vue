@@ -1,4 +1,5 @@
 <template>
+  <PageHeader page-title="首页" />
   <div class="flex flex-col gap-4">
     <!-- card infomation -->
     <div class="flex justify-between gap-4">
@@ -66,16 +67,24 @@
       </el-card>
     </div>
     <el-divider />
-    <div></div>
+    <div class="grid grid-cols-8 gap-4">
+      <!-- <echarts /> -->
+      <div class="col-span-4"><echart2></echart2></div>
+      <div class="col-span-4"><echart1></echart1></div>
+      <!-- <echart1></echart1>
+      <echart2></echart2> -->
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
-
-const income = ref<Number>(1919810);
-const expense = ref<Number>(114514);
-const netIncome = ref<Number>((income.value as number) - (expense.value as number));
+// import Echarts from '../components/Echarts.vue';
+import Echart1 from "../components/Echart1.vue";
+import Echart2 from "../components/Echart2.vue";
+import PageHeader from "../components/PageHeader.vue";
+const income = ref<number>(1919810);
+const expense = ref<number>(114514);
+const netIncome = ref<number>((income.value as number) - (expense.value as number));
 </script>
 
 <style scoped>
