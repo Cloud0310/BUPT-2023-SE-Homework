@@ -66,6 +66,21 @@ function handleLoginClick() {
               </Button>
             </router-link>
           </div>
+
+          <div>
+            <router-link to="/frontdesk">
+              <Button class="w-full hover:gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+                  <path
+                    fill="currentColor"
+                    d="M450.001-90v-179.848L310-131.847 267.847-174l182.154-182.154v-93.847h-93.847L174-267.847 131.847-310l138.001-140.001H90.001v-59.998h179.847L131.847-650 174-692.153l182.154 182.154h93.847v-93.847L267.847-786 310-828.153l140.001 138.001v-179.847h59.998v179.847L650-828.153 692.153-786 509.999-603.846v93.847h93.847L786-692.153 828.153-650 690.152-509.999h179.847v59.998H690.152L828.153-310 786-267.847 603.846-450.001h-93.847v93.847L692.153-174 650-131.847 509.999-269.848v179.847h-59.998Z"
+                  />
+                </svg>
+                <span>前台测试</span>
+              </Button>
+            </router-link>
+          </div>
+
           <!-- help page (may not implement) -->
           <!-- <div class=""></div> -->
           <!-- login and logout -->
