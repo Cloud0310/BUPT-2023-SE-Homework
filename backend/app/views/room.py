@@ -15,7 +15,7 @@ def check_in():
 
     room = Room.query.filter_by(id=room_id).first()
     if room:
-        # 入住房间的逻辑
+        # Check in logic
         pass
         return jsonify({"room": room.id}), 200
     else:
@@ -31,7 +31,7 @@ def check_out():
 
     room = Room.query.filter_by(id=room_number).first()
     if room:
-        # 退房的逻辑
+        # Check out logic
         pass
         report_data = generate_report(room)
         return jsonify({"room": room.number, "report": report_data}), 200
@@ -39,6 +39,6 @@ def check_out():
         return jsonify({"error": "Room not found"}), 404
 
 def generate_report(room):
-    # 生成报告的逻辑
+    # Generate report logic
     pass
     return {}

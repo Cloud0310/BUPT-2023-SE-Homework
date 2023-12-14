@@ -2,10 +2,11 @@
 backend/
 |-- app/
 |      |-- views/           # 视图函数
-|          |-- auth.py      # 包含登录和注销的视图函数  
-|          |-- data.py      # 包含数据收集相关的视图函数，弃用
+|          |-- auth.py      # 包含登录和注销的视图函数
 |          |-- admin.py     # 包含设备管理相关的视图函数
 |          |-- control.py   # 处理客户端控制操作
+|          |-- client.py    # 处理有关客户端
+|          |-- billing.py   # 生成账单和详单的视图函数
 |          |-- query.py     # 包含数据查询相关的视图函数
 |          |-- room.py      # 包含房间相关的视图函数
 |      |-- config.py        # 配置文件
@@ -13,9 +14,8 @@ backend/
 |      |-- models.py        # 数据库模型
 |      |-- utils.py         # 存储辅助函数和工具函数
 |-- data/
-|      |-- Bupt.db          # Sqlite 数据库
-|-- manager.py          	# 运行文件
-|-- README.MD        
+|      |-- buptse.db        # Sqlite 数据库
+|-- cli.py          		# 运行文件
 ```
 ## 后端部分交互使用说明文档
 
@@ -61,8 +61,6 @@ sqlite>.mode column
 sqlite>.timer on
 ```
 
-> 虽然笔者并没有成功，但貌似是这样修改（笑）
-
 可以使用以下命令来查看你的SQLite配置:
 
 ```
@@ -78,13 +76,13 @@ sqlite>.quit
 当你想导出完整的`.sql`文件的时候，可以使用如下命令:
 
 ```
-sqlite3>xxx.db .dump > xxx.sql
+sqlite3 xxx.db .dump > xxx.sql
 ```
 
 当然，也可以由`.sql`恢复成`.db`:
 
 ```
-sqlite3>xxx.db < xxx.sql
+sqlite3 xxx.db < xxx.sql
 ```
 
 > 注：这里导出的`.sql`文件的编码格式为ASCII
@@ -93,12 +91,9 @@ sqlite3>xxx.db < xxx.sql
 
 > 注：这里的表结构不一定是最终版的表结构，只是为了便于进行测试
 
-首先当然是要明确我们需要几张表，每张表里有什么，大致如下:
+首先当然是要明确我们需要几张表，每张表里有什么，例如:
 
-- records表：
-    - id：TEXT类型，主键，记录的唯一标识
-    - room：TEXT类型，表示房间号
-- devices表：
+- Devices表：
     - room：TEXT类型，表示房间号
     - public_key：TEXT类型，表示设备的公钥
         check_ins表：
@@ -106,12 +101,6 @@ sqlite3>xxx.db < xxx.sql
     - check_in_time：存储入住时间的字段，具体类型取决于你希望使用的时间表示方式
     - check_out_time：存储退房时间的字段，具体类型取决于你希望使用的时间表示方式
     - timestamp：存储时间戳的字段，用于记录操作发生的时间
-- expenses表（统计用）：
-    - date：存储日期的字段，具体类型取决于你希望使用的日期表示方式
-    - amount：存储金额的字段，具体类型取决于你希望使用的金额表示方式
-- income表（统计用）：
-    - date：存储日期的字段，具体类型取决于你希望使用的日期表示方式
-    - amount：存储金额的字段，具体类型取决于你希望使用的金额表示方式
 
 明确了需求，现在我们就来着手创建一下，`CREATE TABLE`语句的基本语法如下:
 
@@ -150,4 +139,43 @@ sqlite>.tables
 sqlite>.schema table_name
 ```
 
-> 未完待续...
+![image](/img/1.png)
+
+### 3. 完整的创建表命令
+
+```
+sqlite> CREATE TABLE Users(
+   username TEXT PRIMARY KEY NOT NULL,
+   role TEXT NOT NULL
+);
+
+sqlite> CREATE TABLE Devices(
+   room TEXT PRIMARY KEY NOT NULL,
+   public_key TEXT NOT NULL
+);
+
+sqlite> CREATE TABLE RoomStatus(
+   room TEXT PRIMARY KEY NOT NULL,
+   temperature INT NOT NULL,
+   wind_speed INT NOT NULL,
+   mode TEXT NOT NULL,
+   sweep BOOLEAN NOT NULL,
+   is_on BOOLEAN NOT NULL,
+   last_update TEXT NOT NULL
+);
+
+sqlite> CREATE TABLE Reports(
+   room TEXT NOT NULL,
+   start_time TEXT NOT NULL,
+   end_time TEXT NOT NULL,
+   temperature INT NOT NULL,
+   wind_speed INT NOT NULL,
+   mode TEXT NOT NULL,
+   sweep BOOLEAN NOT NULL,
+   duration INT NOT NULL,
+   cost INT NOT NULL,
+   PRIMARY KEY (room, start_time),
+   FOREIGN KEY (room) REFERENCES RoomStatus(room)
+);
+```
+
