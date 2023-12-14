@@ -1,5 +1,5 @@
 <template>
-  <v-chart class="chart h-96" :option="option as EChartsOption" autoresize />
+  <v-chart class="chart h-96" :option="(option as EChartsOption)"/>
 </template>
 
 <script lang="ts" setup>
@@ -131,3 +131,9 @@ const option = ref<EChartsOption>({
   ]
 });
 </script>
+
+<style scoped>
+.chart{
+  width: 500px;
+}
+</style>

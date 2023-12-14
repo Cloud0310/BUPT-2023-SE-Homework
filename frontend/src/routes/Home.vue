@@ -67,12 +67,9 @@
       </el-card>
     </div>
     <el-divider />
-    <div class="grid grid-cols-8 gap-4">
-      <!-- <echarts /> -->
-      <div class="col-span-4"><echart2></echart2></div>
-      <div class="col-span-4"><echart1></echart1></div>
-      <!-- <echart1></echart1>
-      <echart2></echart2> -->
+    <div class="flex justify-between gap-2">
+      <echart1></echart1>
+      <echart2></echart2>
     </div>
   </div>
 </template>

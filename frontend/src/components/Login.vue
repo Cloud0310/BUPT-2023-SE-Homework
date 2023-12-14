@@ -52,7 +52,7 @@
           </div> -->
 
         </div>
-        <div class="text-right">
+        <!-- <div class="text-right">
           <button type="button" @click="handleRegisterClick" class="underline">注册
           </button>
           <Register 
@@ -60,7 +60,7 @@
           @close="isRegisterPannelEnabled = false"
           @register="handleRegister"
           ></Register>
-        </div>
+        </div> -->
       </div>
     </div>
   </Teleport>
@@ -69,7 +69,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 // import { ElMessage } from "element-plus";
-import Register from "./Register.vue";
+// import Register from "./Register.vue";
 
 defineProps({
   isLoginPannelEnabled: { type: Boolean, required: true }
@@ -85,7 +85,7 @@ const password = ref("");
 const options = ref("前台");
 
 // const emitsLogin = defineEmits(['login']);
-const isRegister = ref<boolean>(false);
+const isLogin = ref<boolean>(false);
 
 function confirmlogin() {
   if (username.value === "admin" && password.value === "admin") {
@@ -99,17 +99,17 @@ function confirmlogin() {
     ElMessage({ message: "登录失败！请检查用户名和密码。", type: "error" });
   }
 }
-const isRegisterPannelEnabled = ref<boolean>(false);
-const isLogin = ref<boolean>(false);
-function handleRegister(isregistered: boolean) {
-  isLogin.value = isregistered;
-}
-function handleRegisterClick() {
-  if (!isLogin.value) {
-    isRegisterPannelEnabled.value = true;
-    // router.push('/login');
-  } else {
-    isRegister.value = false;
-  }
-}
+// const isRegisterPannelEnabled = ref<boolean>(false);
+// const isRegister = ref<boolean>(false);
+// function handleRegister(isregistered: boolean) {
+//   isLogin.value = isregistered;
+// }
+// function handleRegisterClick() {
+//   if (!isLogin.value) {
+//     isRegisterPannelEnabled.value = true;
+//     // router.push('/login');
+//   } else {
+//     isRegister.value = false;
+//   }
+// }
 </script>
