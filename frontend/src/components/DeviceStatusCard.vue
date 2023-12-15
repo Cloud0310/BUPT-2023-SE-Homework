@@ -23,7 +23,7 @@
         <div class="mb-1">
           <img src="/images/icons/mode_heat_cool.svg" alt="模式" class="mr-2 inline-block h-6 w-6" />
           <!-- <span class="mr-2 inline-block align-middle text-xs">模式</span> -->
-          <el-select v-model="currentMode" size="small" style="width: 60px">
+          <el-select v-model="currentMode" size="small" style="width: 60px" :disabled="!on">
             <el-option v-for="mode in modeOptions" :key="mode.value" :label="mode.label" :value="mode.value">
               <div class="flex items-center justify-between">
                 <img :src="`images/icons/${mode.value}.svg`" :alt="mode.label" class="h-6 w-6 text-primary-100" />
@@ -34,7 +34,7 @@
         </div>
         <div class="mt-1">
           <img src="/images/icons/sweep.svg" alt="扫风" class="mr-2 inline-block h-6 w-6" />
-          <el-switch v-model="sweeping" inlinePrompt :activeIcon="Check" :inactiveIcon="Close" />
+          <el-switch v-model="sweeping" :disabled="!on" inlinePrompt :activeIcon="Check" :inactiveIcon="Close" />
         </div>
       </div>
       <div class="mx-3 h-10 w-[1px] bg-neutral-300" />
@@ -42,7 +42,7 @@
       <div>
         <button
           type="button"
-          @click="() => (on = !on)"
+          @click="() => (fanSpeed = (on = !on) ? fanSpeed : 0)"
           class="h-11 w-11 rounded-full border border-transparent bg-neutral-100 p-2 transition-colors"
           :class="{
             'text-primary-400': on,
@@ -64,7 +64,7 @@
       <!-- temperature display -->
       <div class="inline-block">
         <div
-          class="inline-block w-24 align-bottom"
+          class="inline-block w-24 align-bottom transition-colors"
           :style="{
             color: temperatureToHSL(temperature)
           }"
@@ -73,7 +73,15 @@
           <span class="text-2xl">℃</span>
         </div>
         <div class="mr-10 inline-block h-[150px]">
-          <el-slider v-model="temperature" vertical :max="35" :min="0" :marks="marks" placement="right"></el-slider>
+          <el-slider
+            v-model="temperature"
+            vertical
+            :max="35"
+            :min="0"
+            :marks="marks"
+            placement="right"
+            :disabled="!on"
+          />
         </div>
       </div>
       <!-- wind speed display-->
@@ -90,13 +98,31 @@
             </svg>
           </div>
           <div class="inline-block align-middle text-lg">
-            <el-input-number v-model="fanSpeed" :min="0" :max="5"></el-input-number>
+            <el-input-number v-model="fanSpeed" :disabled="!on" :min="0" :max="5"></el-input-number>
           </div>
         </div>
       </div>
     </div>
     <!-- last update time -->
-    <div class="flex justify-end">
+    <div class="flex justify-between">
+      <div>
+        <el-button v-if="!isCheckedIn" @click="isCheckedIn = true"> 入住 </el-button>
+        <el-button v-else @click="(showBillDialog = true), (isCheckedIn = false), (on = false), (fanSpeed = 0)">
+          退房
+        </el-button>
+        <el-dialog v-model="showBillDialog" center title="账单" append-to-body>
+          <el-table :data="billData" stripe>
+            <el-table-column prop="startTime" label="开始时间" width="120" />
+            <el-table-column prop="endTime" label="结束时间" width="120" />
+            <el-table-column prop="temperature" label="温度" />
+            <el-table-column prop="wind_speed" label="风速" />
+            <el-table-column prop="mode" label="模式" />
+            <el-table-column prop="sweep" label="扫风" />
+            <el-table-column prop="duration" label="时长" />
+            <el-table-column prop="cost" label="费用" fixed="right" />
+          </el-table>
+        </el-dialog>
+      </div>
       <span class="text-xs text-neutral-500"
         >最后更新于
         {{
@@ -123,6 +149,13 @@ const props = defineProps({
   }
 });
 
+const dateOptions = {
+  month: "short",
+  day: "numeric",
+  hour: "numeric",
+  minute: "numeric"
+};
+
 const modeOptions = [
   {
     value: "cool",
@@ -135,6 +168,10 @@ const modeOptions = [
   {
     value: "auto",
     label: "自动"
+  },
+  {
+    value: "off",
+    label: "关闭"
   }
 ];
 
@@ -152,6 +189,79 @@ interface roomStatus {
   isWeeping: boolean;
   lastUpdate: Date;
 }
+
+const billData = [
+  {
+    startTime: new Date("01-01 00:12:00").toLocaleString("zh-cn", dateOptions as any),
+    endTime: new Date("01-01 01:12:00").toLocaleString("zh-cn", dateOptions as any),
+    temperature: "25℃",
+    wind_speed: "2",
+    mode: "制冷",
+    sweep: "是",
+    duration: "1 小时",
+    cost: "10 元"
+  },
+  {
+    startTime: new Date("01-01 02:12:00").toLocaleString("zh-cn", dateOptions as any),
+    endTime: new Date("01-01 03:12:00").toLocaleString("zh-cn", dateOptions as any),
+    temperature: "18℃",
+    wind_speed: "3",
+    mode: "制冷",
+    sweep: "是",
+    duration: "30 分钟",
+    cost: "5 元"
+  },
+  {
+    startTime: new Date("01-01 04:12:00").toLocaleString("zh-cn", dateOptions as any),
+    endTime: new Date("01-01 05:12:00").toLocaleString("zh-cn", dateOptions as any),
+    temperature: "25℃",
+    wind_speed: "2",
+    mode: "制冷",
+    sweep: "是",
+    duration: "1 小时",
+    cost: "10 元"
+  },
+  {
+    startTime: new Date("01-01 06:12:00").toLocaleString("zh-cn", dateOptions as any),
+    endTime: new Date("01-01 07:12:00").toLocaleString("zh-cn", dateOptions as any),
+    temperature: "18℃",
+    wind_speed: "3",
+    mode: "制冷",
+    sweep: "是",
+    duration: "30 分钟",
+    cost: "5 元"
+  },
+  {
+    startTime: new Date("01-01 08:12:00").toLocaleString("zh-cn", dateOptions as any),
+    endTime: new Date("01-01 09:12:00").toLocaleString("zh-cn", dateOptions as any),
+    temperature: "25℃",
+    wind_speed: "2",
+    mode: "制冷",
+    sweep: "是",
+    duration: "1 小时",
+    cost: "10 元"
+  },
+  {
+    startTime: new Date("01-01 10:12:00").toLocaleString("zh-cn", dateOptions as any),
+    endTime: new Date("01-01 11:12:00").toLocaleString("zh-cn", dateOptions as any),
+    temperature: "18℃",
+    wind_speed: "3",
+    mode: "制冷",
+    sweep: "是",
+    duration: "30 分钟",
+    cost: "5 元"
+  },
+  {
+    startTime: new Date("01-01 12:12:00").toLocaleString("zh-cn", dateOptions as any),
+    endTime: new Date("01-01 13:12:00").toLocaleString("zh-cn", dateOptions as any),
+    temperature: "25℃",
+    wind_speed: "2",
+    mode: "制冷",
+    sweep: "是",
+    duration: "1 小时",
+    cost: "10 元"
+  }
+];
 
 function getRoomStatus(
   csrfToken: string,
@@ -173,15 +283,17 @@ function getRoomStatus(
   onSuccess(s);
   onError("failed");
 }
+const isCheckedIn = ref<boolean>(true);
+const showBillDialog = ref<boolean>(false);
 
-const currentMode = ref("cool");
-const sweeping = ref(false);
-const temperature = ref(25);
+const on = ref(true);
+const currentMode = ref(on ? "cool" : "off");
+const sweeping = ref(on ? true : false);
+const temperature = ref(Math.floor(Math.random() * 30));
 const minTemperature = 0;
 const maxTemperature = 35;
-const on = ref(true);
-const fanSpeed = ref(1);
-const lastUpdate = ref(new Date());
+const fanSpeed = ref(on.value ? 1 : 0);
+const lastUpdate = ref<Date>(new Date());
 
 function updateRoomStatus() {
   getRoomStatus(
@@ -198,12 +310,15 @@ function updateRoomStatus() {
 }
 
 function temperatureToHSL(temp: number) {
-  const hue = 240 + ((temp - minTemperature) / (maxTemperature - minTemperature)) * 120;
-  return `hsl(${hue}, 75%, 70%)`;
+  if (on.value) {
+    const hue = 240 + ((temp - minTemperature) / (maxTemperature - minTemperature)) * 120;
+    return `hsl(${hue}, 80%, 65%)`;
+  } else {
+    return "hsl(0, 0%, 70%)";
+  }
 }
 
 let intervalId = 0;
-intervalId;
 
 let angle = 0;
 let buffer: P5.Graphics;
@@ -249,6 +364,6 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  // clearInterval(intervalId);
+  clearInterval(intervalId);
 });
 </script>

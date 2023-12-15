@@ -14,6 +14,8 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -webkit-text-size-adjust: 100%;
+    --el-color-primary: #a78bfa !important;
+    --el-border-radius-small: 0.125rem !important;
 }
 
 #app {

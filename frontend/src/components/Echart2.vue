@@ -1,5 +1,5 @@
 <template>
-  <v-chart class="chart h-96" :option="option as EChartsOption" autoresize />
+  <v-chart class="h-96 w-[500px]" :option="option as EChartsOption" />
 </template>
 
 <script lang="ts" setup>

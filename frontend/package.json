@@ -21,8 +21,7 @@
         "vite-plugin-inspect": "^0.7.42",
         "vue": "^3.3.11",
         "vue-echarts": "^6.6.3",
-        "vue-router": "^4.2.5",
-        "vue3-echarts": "^1.1.0"
+        "vue-router": "^4.2.5"
     },
     "devDependencies": {
         "@types/p5": "^1.7.4",
