@@ -1,5 +1,5 @@
 <template>
-  <PageHeader page-title="前台" />
+  <PageHeader page-title="主页" />
   <div class="flex h-[calc(100%-9rem)] flex-col justify-between py-10">
     <div>
       <span class="text-8xl font-bold text-primary-500"> 欢迎！ </span>

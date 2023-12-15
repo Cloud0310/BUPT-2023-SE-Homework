@@ -39,7 +39,7 @@ function handleLoginClick() {
         <!-- menu -->
         <div class="flex flex-col gap-3">
           <div>
-            <router-link to="/admin">
+            <router-link to="/">
               <PanelSwitchButton class="w-full hover:gap-3">
                 <!-- home icon from material symbols -->
                 <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
@@ -67,7 +67,7 @@ function handleLoginClick() {
             </router-link>
           </div>
           <div>
-            <router-link to="/frontdesk">
+            <router-link to="/admin">
               <PanelSwitchButton class="w-full hover:gap-3">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" class="h-6 w-6">
                   <path
@@ -75,7 +75,7 @@ function handleLoginClick() {
                     d="M120-120v-80h80v-560q0-33 23.5-56.5T280-840h400q33 0 56.5 23.5T760-760v560h80v80H120Zm560-80v-560H280v560h400ZM560-440q17 0 28.5-11.5T600-480q0-17-11.5-28.5T560-520q-17 0-28.5 11.5T520-480q0 17 11.5 28.5T560-440ZM280-760v560-560Z"
                   />
                 </svg>
-                <span>前台</span>
+                <span>管理</span>
               </PanelSwitchButton>
             </router-link>
           </div>

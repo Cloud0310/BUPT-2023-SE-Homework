@@ -107,7 +107,9 @@
     <div class="flex justify-between">
       <div>
         <el-button v-if="!isCheckedIn" @click="isCheckedIn = true"> 入住 </el-button>
-        <el-button v-else @click="(showBillDialog = true), (isCheckedIn = false), (on = false)"> 退房 </el-button>
+        <el-button v-else @click="(showBillDialog = true), (isCheckedIn = false), (on = false), (fanSpeed = 0)">
+          退房
+        </el-button>
         <el-dialog v-model="showBillDialog" center title="账单" append-to-body>
           <el-table :data="billData" stripe>
             <el-table-column prop="startTime" label="开始时间" width="120" />
@@ -260,6 +262,7 @@ const billData = [
     cost: "10 元"
   }
 ];
+
 function getRoomStatus(
   csrfToken: string,
   roomId: string,
