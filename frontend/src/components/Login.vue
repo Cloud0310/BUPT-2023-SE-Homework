@@ -44,23 +44,7 @@
           >
             登录
           </button>
-          <!-- <div>
-            <el-radio-group v-model="options">
-              <el-radio label="前台" />
-              <el-radio label="空调管理员" />
-            </el-radio-group>
-          </div> -->
-
         </div>
-        <!-- <div class="text-right">
-          <button type="button" @click="handleRegisterClick" class="underline">注册
-          </button>
-          <Register 
-          :is-register-pannel-enabled="isRegisterPannelEnabled"
-          @close="isRegisterPannelEnabled = false"
-          @register="handleRegister"
-          ></Register>
-        </div> -->
       </div>
     </div>
   </Teleport>
@@ -68,8 +52,6 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-// import { ElMessage } from "element-plus";
-// import Register from "./Register.vue";
 
 defineProps({
   isLoginPannelEnabled: { type: Boolean, required: true }
@@ -90,7 +72,7 @@ const isLogin = ref<boolean>(false);
 function confirmlogin() {
   if (username.value === "admin" && password.value === "admin") {
     console.log("确认登录");
-    console.log(options.value)
+    console.log(options.value);
     isLogin.value = true;
     emits("login", isLogin.value);
     ElMessage({ message: "登录成功！欢迎使用！", type: "success" });

@@ -1,5 +1,5 @@
 <template>
-  <div class="z-10 flex h-24 w-full items-center">
+  <div class="z-10 flex h-36 w-full items-center">
     <span class="text-4xl font-bold underline decoration-primary-300 decoration-[10px] underline-offset-[-4px]">{{
       pageTitle
     }}</span>

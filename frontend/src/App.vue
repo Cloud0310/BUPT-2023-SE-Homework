@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import Button from "./components/Button.vue";
+import PanelSwitchButton from "./components/PanelSwitchButton.vue";
 import Login from "./components/Login.vue";
 // const dateInfo = ref<Date>(new Date(Date.now()));
 
@@ -13,7 +13,6 @@ function handleLogin(isLoggedIn: boolean) {
 function handleLoginClick() {
   if (!isLogin.value) {
     isLoginPannelEnabled.value = true;
-    // router.push('/login');
   } else {
     isLogin.value = false;
   }
@@ -40,8 +39,8 @@ function handleLoginClick() {
         <!-- menu -->
         <div class="flex flex-col gap-3">
           <div>
-            <router-link to="/">
-              <Button class="w-full hover:gap-3">
+            <router-link to="/admin">
+              <PanelSwitchButton class="w-full hover:gap-3">
                 <!-- home icon from material symbols -->
                 <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
                   <path
@@ -50,44 +49,41 @@ function handleLoginClick() {
                   />
                 </svg>
                 <span>主页</span>
-              </Button>
+              </PanelSwitchButton>
             </router-link>
           </div>
           <div>
             <router-link to="/devices">
-              <Button class="w-full hover:gap-3">
+              <PanelSwitchButton class="w-full hover:gap-3">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
                   <path
                     fill="currentColor"
-                    d="M450.001-90v-179.848L310-131.847 267.847-174l182.154-182.154v-93.847h-93.847L174-267.847 131.847-310l138.001-140.001H90.001v-59.998h179.847L131.847-650 174-692.153l182.154 182.154h93.847v-93.847L267.847-786 310-828.153l140.001 138.001v-179.847h59.998v179.847L650-828.153 692.153-786 509.999-603.846v93.847h93.847L786-692.153 828.153-650 690.152-509.999h179.847v59.998H690.152L828.153-310 786-267.847 603.846-450.001h-93.847v93.847L692.153-174 650-131.847 509.999-269.848v179.847h-59.998Z"
+                    d="M120-120v-80h80v-640h400v40h160v240h-80v-160h-80v240h-80v-280H280v560h200v80H120Zm560 40-12-60q-12-5-22.5-11T625-165l-58 20-40-69 45-40q-2-15-2-25.5t2-25.5l-45-40 40-69 58 20q10-8 20.5-14.5T668-420l12-60h80l12 60q12 5 22.5 11t20.5 14l58-20 40 69-45 40q2 15 2 25.5t-2 25.5l45 40-40 69-58-19q-10 8-20.5 14T772-140l-12 60h-80Zm40-120q33 0 56.5-23.5T800-280q0-33-23.5-56.5T720-360q-33 0-56.5 23.5T640-280q0 33 23.5 56.5T720-200ZM440-440q-17 0-28.5-11.5T400-480q0-17 11.5-28.5T440-520q17 0 28.5 11.5T480-480q0 17-11.5 28.5T440-440ZM280-200v-560 560Z"
                   />
+                  /> />
                 </svg>
-                <span>设备</span>
-              </Button>
+                <span>房间</span>
+              </PanelSwitchButton>
             </router-link>
           </div>
-
           <div>
             <router-link to="/frontdesk">
-              <Button class="w-full hover:gap-3">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+              <PanelSwitchButton class="w-full hover:gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" class="h-6 w-6">
                   <path
                     fill="currentColor"
-                    d="M450.001-90v-179.848L310-131.847 267.847-174l182.154-182.154v-93.847h-93.847L174-267.847 131.847-310l138.001-140.001H90.001v-59.998h179.847L131.847-650 174-692.153l182.154 182.154h93.847v-93.847L267.847-786 310-828.153l140.001 138.001v-179.847h59.998v179.847L650-828.153 692.153-786 509.999-603.846v93.847h93.847L786-692.153 828.153-650 690.152-509.999h179.847v59.998H690.152L828.153-310 786-267.847 603.846-450.001h-93.847v93.847L692.153-174 650-131.847 509.999-269.848v179.847h-59.998Z"
+                    d="M120-120v-80h80v-560q0-33 23.5-56.5T280-840h400q33 0 56.5 23.5T760-760v560h80v80H120Zm560-80v-560H280v560h400ZM560-440q17 0 28.5-11.5T600-480q0-17-11.5-28.5T560-520q-17 0-28.5 11.5T520-480q0 17 11.5 28.5T560-440ZM280-760v560-560Z"
                   />
                 </svg>
-                <span>前台测试</span>
-              </Button>
+                <span>前台</span>
+              </PanelSwitchButton>
             </router-link>
           </div>
-
           <!-- help page (may not implement) -->
-          <!-- <div class=""></div> -->
-          <!-- login and logout -->
         </div>
       </div>
       <div class="my-5 flex w-full justify-center">
-        <Button @click="handleLoginClick">
+        <PanelSwitchButton @click="handleLoginClick">
           <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
             <path
               fill="currentColor"
@@ -96,7 +92,7 @@ function handleLoginClick() {
           </svg>
           <span v-if="isLogin">退出</span>
           <span v-else>登录</span>
-        </Button>
+        </PanelSwitchButton>
         <Login
           :is-login-pannel-enabled="isLoginPannelEnabled"
           @close="isLoginPannelEnabled = false"
@@ -105,30 +101,6 @@ function handleLoginClick() {
       </div>
     </div>
     <div class="h-full w-5/6 overflow-y-scroll bg-neutral-100 px-16" id="content">
-      <!-- <div class="my-5 flex h-20 items-center justify-between px-5">
-        <div class="flex h-full flex-col justify-center gap-[0.2rem] font-bold">
-          <div class="text-2xl">仪表板</div>
-          <div class="text-sm text-neutral-400">
-            {{
-              dateInfo.toLocaleTimeString("zh-CN", {
-                hour: "2-digit",
-                minute: "2-digit"
-              })
-            }}
-          </div>
-        </div>
-        <div class="flex items-center justify-evenly gap-3">
-          <div>
-            <svg xmlns="http://www.w3.org/2000/svg" height="40" viewBox="0 -960 960 960" width="40">
-              <path
-                fill="currentColor"
-                d="M243.924-277.307q54-36.846 112.615-54.769Q415.154-349.999 480-349.999t123.461 17.923q58.615 17.923 112.615 54.769 37.308-41 56.616-92.923Q792-422.154 792-480q0-129.675-91.23-220.838Q609.541-792 479.77-792 350-792 259-700.838 168-609.675 168-480q0 57.846 19.308 109.77 19.308 51.923 56.616 92.923Zm236.088-140.694q-55.781 0-94.896-39.103-39.115-39.104-39.115-94.884 0-55.781 39.103-94.896 39.104-39.115 94.884-39.115 55.781 0 94.896 39.103 39.115 39.104 39.115 94.884 0 55.781-39.103 94.896-39.104 39.115-94.884 39.115Zm.264 302q-75.43 0-141.775-28.27-66.346-28.269-116.154-78.076-49.807-49.808-78.076-116.112-28.27-66.304-28.27-141.999 0-75.696 28.27-141.541 28.269-65.846 78.076-115.654 49.808-49.807 116.112-78.076 66.304-28.27 141.999-28.27 75.696 0 141.541 28.27 65.846 28.269 115.654 78.076 49.807 49.808 78.076 115.878 28.27 66.07 28.27 141.499 0 75.43-28.27 141.775-28.269 66.346-78.076 116.154-49.808 49.807-115.878 78.076-66.07 28.27-141.499 28.27ZM480-168q53.154 0 104.423-18.423 51.27-18.423 93.27-52.731-43-28.154-93.116-43.5Q534.462-298.001 480-298.001q-54.462 0-105.27 14.654-50.808 14.654-92.423 44.193 42 34.308 93.27 52.731Q426.846-168 480-168Zm0-301.999q33.846 0 57.924-24.077 24.077-24.078 24.077-57.924 0-33.846-24.077-57.924-24.078-24.077-57.924-24.077-33.846 0-57.924 24.077-24.077 24.078-24.077 57.924 0 33.846 24.077 57.924 24.078 24.077 57.924 24.077ZM480-552Zm0 314Z"
-              />
-            </svg>
-          </div>
-          <div class="text-xl font-bold">Cloud Liu</div>
-        </div>
-      </div> -->
       <router-view />
     </div>
   </div>

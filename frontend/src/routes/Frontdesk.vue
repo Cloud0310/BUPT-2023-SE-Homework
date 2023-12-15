@@ -1,109 +1,40 @@
 <template>
-  <div class="bg-primary-100 h-full ">
-    <div class="flex flex-col gap-3 ">
-        <div class="flex justify-center">欢迎登录波普特酒店温控管理系统！</div>
-        <div class="flex justify-center">
-            <button 
-                type="button"
-                class="rounded-lg bg-primary-300 px-5 py-2 text-sm text-neutral-50 transition-all hover:bg-primary-400 hover:text-neutral-100"
-                @click="dialogPrintbill=true"
-                >
-                打印账单
-            </button>
-        </div>
-        <div class="flex justify-center">
-            <button 
-                type="button"
-                class="rounded-lg bg-primary-300 px-5 py-2 text-sm text-neutral-50 transition-all hover:bg-primary-400 hover:text-neutral-100"
-                @click="dialogPrintdetail=true"
-                >
-                打印详单
-            </button>
-        </div>
+  <PageHeader page-title="前台" />
+  <div class="flex h-[calc(100%-9rem)] flex-col justify-between py-10">
+    <div>
+      <span class="text-8xl font-bold text-primary-500"> 欢迎！ </span>
     </div>
-    <el-dialog v-model="dialogPrintbill" title="账单" center>
-        <el-table :data="billData" class="flex justify-center">
-            <el-table-column property="roomID" label="房间号" width="85" />
-            <el-table-column property="timeIN" label="入住时间" width="150" />
-            <el-table-column property="timeOUT" label="退房时间" width="150" />
-            <el-table-column property="cost" label="费用" width="75" />
-            <el-table-column property="note" label="备注" width="100"/>
-        </el-table>
-    </el-dialog>
-
-    <el-dialog v-model="dialogPrintdetail" title="详单" center>
-        <el-table :data="detailData" class="flex justify-center">
-            <el-table-column property="roomID" label="房间号" width="85" />
-            <el-table-column property="timeIN" label="入住时间" width="100" />
-            <el-table-column property="timeOUT" label="退房时间" width="100" />
-            <el-table-column property="temperature" label="温度" width="75" />
-            <el-table-column property="mode" label="模式" width="75" />
-            <el-table-column property="windSpeed" label="风速" width="75" />
-            <el-table-column property="cost" label="费用" width="75" />
-            <el-table-column property="note" label="备注" width="100"/>
-        </el-table>
-    </el-dialog>
+    <div class="flex h-24 w-full justify-end">
+      <button type="button" @click="showLoginPanel = true">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="mx-7 inline-block h-24 w-24 text-primary-300"
+          viewBox="0 -960 960 960"
+        >
+          <path
+            fill="currentColor"
+            d="M480-120v-80h280v-560H480v-80h280q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H480Zm-80-160-55-58 102-102H120v-80h327L345-622l55-58 200 200-200 200Z"
+          />
+        </svg>
+        <span class="inline-block align-middle text-5xl font-bold text-neutral-500"> 登录 </span>
+      </button>
+      <el-dialog v-model="showLoginPanel" append-to-body title="登录" width="30%">
+        <div class="flex flex-col gap-4 px-12">
+          <el-input v-model="username" placeholder="请输入用户名" clearable />
+          <el-input v-model="password" placeholder="请输入密码" clearable type="password" show-password />
+          <div class="flex justify-end">
+            <el-button type="primary" @click="showLoginPanel = false" style="--el-color-primary-light-3: #ddd6fe" small
+              >登录</el-button
+            >
+          </div>
+        </div>
+      </el-dialog>
+    </div>
   </div>
-
 </template>
 
-
 <script lang="ts" setup>
-const dialogPrintbill = ref<boolean>(false);
-const dialogPrintdetail = ref<boolean>(false);
-const billData =[
-    {
-        roomID: '1-114',
-        timeIN: '2023-12-14',
-        timeOUT: '2023-12-16',
-        cost: 500.00,
-        note: '',
-    },
-    {
-        roomID: '1-113',
-        timeIN: '2023-12-14',
-        timeOUT: '2023-12-16',
-        cost: 500.00,
-        note: '',
-    },
-    {
-        roomID: '1-112',
-        timeIN: '2023-12-14',
-        timeOUT: '2023-12-16',
-        cost: 500.00,
-        note: '',
-    },
-];
-const detailData = [
-    {
-        roomID: '1-114',
-        timeIN: '2023-12-14',
-        timeOUT: '2023-12-16',
-        temperature: 28,
-        mode: '制冷',
-        windSpeed: 3,
-        cost: 500.00,
-        note: '',
-    },
-    {
-        roomID: '1-113',
-        timeIN: '2023-12-14',
-        timeOUT: '2023-12-16',
-        temperature: 28,
-        mode: '制冷',
-        windSpeed: 3,
-        cost: 500.00,
-        note: '',
-    },
-    {
-        roomID: '1-112',
-        timeIN: '2023-12-14',
-        timeOUT: '2023-12-16',
-        temperature: 28,
-        mode: '制冷',
-        windSpeed: 3,
-        cost: 500.00,
-        note: '',
-    },
-]
+const showLoginPanel = ref(false);
+const username = ref("");
+const password = ref("");
 </script>

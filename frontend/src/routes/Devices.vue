@@ -1,6 +1,12 @@
 <template>
-  <PageHeader page-title="设备" />
+  <PageHeader page-title="房间" />
   <div class="flex flex-wrap gap-3">
+    <DeviceStatusCard
+      v-for="(roomId, index) in roomIDs"
+      :roomId="roomId"
+      :key="index"
+      class="h-[370px] shrink-0 grow basis-[max(calc(33%-0.375rem),400px)] bg-[#fffbff] drop-shadow-lg"
+    />
     <div
       class="flex h-[370px] flex-1 shrink-0 grow basis-[max(calc(33%-0.375rem),400px)] items-center justify-center rounded-xl bg-[#fffbffb5] p-2 drop-shadow-lg"
     >
@@ -10,12 +16,6 @@
         </svg>
       </button>
     </div>
-    <DeviceStatusCard
-      v-for="(roomId, index) in roomIDs"
-      :roomId="roomId"
-      :key="index"
-      class="h-[370px] shrink-0 grow basis-[max(calc(33%-0.375rem),400px)] bg-[#fffbff] drop-shadow-lg"
-    />
   </div>
   <el-dialog v-model="addDeviceDialogVisible" title="添加设备" style="--el-border-radius-small: 0.75rem">
     <div class="flex flex-col gap-4 px-6">
@@ -39,5 +39,3 @@ const addDeviceDialogVisible = ref(false);
 const deviceId = ref("");
 const deviceKey = ref("");
 </script>
-
-<style scoped></style>
