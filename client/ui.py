@@ -12,34 +12,36 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from qfluentwidgets import FluentIcon, RoundMenu
 import requests
 import secrets
+import sys
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 import threading
-from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.primitives.asymmetric import rsa
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.asymmetric import padding
+import rsa
+import base64
 
 # 定义全局变量
 global_state = "stop"
-base_url = "http://localhost:11451/api/device/client"
+data = None
+server_IP = sys.argv[1]
+server_port = sys.argv[2]
+base_url = f"http://{server_IP}:{server_port}/api/device/client"
 DEBOUNCE_TIME = 2000
 
 
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         global global_state
+        global data
         # 获取请求体的长度
         content_length = int(self.headers["Content-Length"])
         # 读取请求体数据
         post_data = self.rfile.read(content_length)
         # 将请求体数据从 bytes 转换为 JSON
-        data = json.loads(post_data)
-        # 更新全局变量
-        global_state = (
-            data["operation"]
-            if data["operation"] in ["start", "stop"]
-            else global_state
+        data = json.loads(
+            rsa.decrypt(
+                base64.urlsafe_b64decode(post_data),
+                rsa.PrivateKey.load_pkcs1(open("private.pem", "rb").read()),
+            ).decode()
         )
 
         # 打印接收到的数据（或进行其他处理）
@@ -54,7 +56,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
 
 def run_server(
-    server_class=HTTPServer, handler_class=SimpleHTTPRequestHandler, port=8000
+    server_class=HTTPServer, handler_class=SimpleHTTPRequestHandler, port=11451
 ):
     server_address = ("", port)
     httpd = server_class(server_address, handler_class)
@@ -75,9 +77,9 @@ class ui_Form(object):
         self.initial_temperature = 25
         self.current_temperature = 25
         self.temperature = 25
-        self.speed = "中风"
+        self.speed = 2
         self.current_mode = "cold"
-        self.sweep = "on"
+        self.sweep = "off"
         self.state = "stop"
         self.room_id = "2-233"  # 假设的房间号
 
@@ -95,31 +97,27 @@ class ui_Form(object):
     def generate_unique_id(self):
         return secrets.token_hex(8)  # 生成 16 字符（8 字节）的十六进制字符串
 
-    def generate_rsa_key_pair(self):
-        # 生成 RSA 密钥对
-        private_key = rsa.generate_private_key(
-            public_exponent=65537,
-            key_size=4096,
-        )
-        public_key = private_key.public_key()
+    # def generate_rsa_key_pair(self):
+    #     # 生成 RSA 密钥对
+    #     private_key = rsa.generate_private_key(
+    #         public_exponent=65537,
+    #         key_size=4096,
+    #     )
+    #     public_key = private_key.public_key()
 
-        return private_key, public_key
+    #     return private_key, public_key
 
     def generate_signature(self, private_key, text):
         # 使用私钥生成签名
-        signature = private_key.sign(
-            text.encode(),
-            padding.PSS(
-                mgf=padding.MGF1(hashes.SHA256()), salt_length=padding.PSS.MAX_LENGTH
-            ),
-            hashes.SHA256(),
-        )
+        signature = base64.urlsafe_b64encode(
+            rsa.sign(text.encode(), private_key, "SHA-256")
+        ).decode()
         return signature
 
     def client_online(self):
         port = "11451"  # 示例端口号
         unique_id = self.generate_unique_id()  # 生成 unique_id
-        private_key, _ = self.generate_rsa_key_pair()  # 生成 RSA 密钥对
+        private_key = rsa.PrivateKey.load_pkcs1(open("private.pem", "rb").read())
         signature = self.generate_signature(
             private_key, self.room_id + unique_id + port
         )  # 生成 signature
@@ -129,13 +127,14 @@ class ui_Form(object):
             "room_id": self.room_id,
             "port": port,
             "unique_id": unique_id,
-            "signature": signature.hex(),
+            "signature": signature,
         }
         response = requests.post(base_url, json=payload)
         if response.status_code == 204:
             print("Client Online successfully")
         else:
             print("Error:", response.status_code)
+            exit(1)
 
     def setupUi(self, Form):
         Form.setObjectName("Form")
@@ -228,27 +227,27 @@ class ui_Form(object):
         self.SwitchButton.checkedChanged.connect(self.toggleSweep)
         self.action_up.triggered.connect(self.action_up_triggered)
         self.action_down.triggered.connect(self.action_down_triggered)
-        self.RadioButton.toggled.connect(self.toggleState)
+        self.RadioButton.clicked.connect(self.toggleState)
 
     def action_up_triggered(self):
         # 这里添加点击 'Up' 时的逻辑
-        if self.speed == "强风":
-            self.speed = "强风"
-        elif self.speed == "中风":
-            self.speed = "强风"
+        if self.speed == 3:
+            self.speed = 3
+        elif self.speed == 2:
+            self.speed = 3
         else:
-            self.speed = "中风"
+            self.speed = 2
         self.updateSpeedLabel()
         self.send_operation_request("wind_speed", str(self.speed))
 
     def action_down_triggered(self):
         # 这里添加点击 'Down' 时的逻辑
-        if self.speed == "强风":
-            self.speed = "中风"
-        elif self.speed == "中风":
-            self.speed = "弱风"
+        if self.speed == 3:
+            self.speed = 2
+        elif self.speed == 2:
+            self.speed = 1
         else:
-            self.speed = "弱风"
+            self.speed = 1
         self.updateSpeedLabel()
         self.send_operation_request("wind_speed", str(self.speed))
 
@@ -285,30 +284,35 @@ class ui_Form(object):
         else:
             self.sweep = "on"
         self.SubtitleLabel_4.setText(f"扫风：{self.sweep}")
-        self.send_operation_request("sweep", str(self.sweep))
+        if self.sweep == "on":
+            self.send_operation_request("sweep", "True")
+        else:
+            self.send_operation_request("sweep", "False")
 
     def toggleState(self):
-        if self.state == "stop":
-            self.state = "start"
+        global global_state
+        if global_state == "stop":
+            global_state = "start"
             self.send_operation_request("start", "sb")
         else:
-            self.state = "stop"
+            global_state = "stop"
             self.send_operation_request("stop", "sb")
 
     def send_operation_request(self, operation, data):
         unique_id = self.generate_unique_id()
-        private_key, _ = self.generate_rsa_key_pair()  # 生成 RSA 密钥对
+        private_key = rsa.PrivateKey.load_pkcs1(open("private.pem", "rb").read())
+        time_now = str(time.localtime())
         signature = self.generate_signature(
-            private_key, self.room_id + unique_id + operation + data
+            private_key, operation + unique_id + data + time_now
         )
         global base_url
-        url = base_url + self.room_id
+        url = base_url + "/" + self.room_id
         payload = {
             "operation": operation,
             "data": data,
-            "time": str(time.localtime()),
+            "time": time_now,
             "unique_id": unique_id,
-            "signature": signature.hex(),
+            "signature": signature,
         }
         response = requests.post(url, json=payload)
         if response.status_code == 204:
@@ -338,9 +342,16 @@ class ui_Form(object):
         currentDateTime = QtCore.QDateTime.currentDateTime()
         self.TimePicker.setTime(currentDateTime.time())
 
+        global global_state 
+        global data
+        # 更新全局变量
+        global_state = (
+            data["operation"]
+            if data is not None and data["operation"] in ["start", "stop"]
+            else global_state
+        )
         # 接收服务端此时的state
-        state = global_state
-        self.state = state
+        self.state = global_state
         self.update_radio_button_state()
         # 回温函数
         if self.state == "start":
