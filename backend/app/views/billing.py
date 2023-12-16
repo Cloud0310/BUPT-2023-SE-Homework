@@ -2,8 +2,10 @@ from flask import Blueprint, request, jsonify
 from app.models import Status
 from datetime import datetime
 from sqlalchemy import desc
+from flask_cors import CORS
 
 billing_blueprint = Blueprint("billing", __name__)
+CORS(billing_blueprint)
 
 # Generate bill
 @billing_blueprint.route("/billing", methods=["POST"])

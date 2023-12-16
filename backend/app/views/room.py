@@ -2,8 +2,10 @@ from flask import Blueprint, request, jsonify, session
 from app import db
 from app.models import Room, Status
 from app.utils import check_csrf_token
+from flask_cors import CORS
 
 room_blueprint = Blueprint("room", __name__)
+CORS(room_blueprint)
 
 @room_blueprint.route("/room/check_in", methods=["POST"])
 def check_in():

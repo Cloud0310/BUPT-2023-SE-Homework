@@ -3,8 +3,10 @@ from app import db
 from app.models import Status
 from datetime import datetime
 from sqlalchemy import desc
+from flask_cors import CORS
 
 control_blueprint = Blueprint("control", __name__)
+CORS(control_blueprint)
 
 @control_blueprint.route("/control", methods=["POST"])
 def server_control():

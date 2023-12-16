@@ -31,7 +31,7 @@ backend/
 - Project src: git clone git@github.com:Cloud0310/BUPT-2023-SE-Homework.git
 - DBMS: SQLite
 
-### 1. 打开SQLite并创建数据库
+### 1. 打开SQLite并连接数据库
 
 请确保你正确安装了SQLite并添加了相应的环境变量，随后打开一个PowerShell输入命令以打开SQLite:
 
@@ -43,9 +43,9 @@ sqlite3
 
 ```
 sqlite>.open buptse.db
-```
+```      
 
-> 注意，这条命令前面的`sqlite>`不需要我们输入，另外，这会在当前目录下创建，请确保你的路径正确，在本项目中，默认在相对路径`/backend/db/`下
+> 注意，这条命令前面的`sqlite>`不需要我们输入，另外，这会在当前目录下创建，请确保你的路径正确，在本项目中，默认在相对路径`/backend/data/`下
 
 你可以使用以下指令来查看是否成功创建，当然也可以在文件夹中直接查看:
 
@@ -87,53 +87,13 @@ sqlite3 xxx.db < xxx.sql
 
 > 注：这里导出的`.sql`文件的编码格式为ASCII
 
-### 2. 初始化数据库配置
-
-> 注：这里的表结构不一定是最终版的表结构，只是为了便于进行测试
-
-首先当然是要明确我们需要几张表，每张表里有什么，例如:
-
-- Devices表：
-    - room：TEXT类型，表示房间号
-    - public_key：TEXT类型，表示设备的公钥
-        check_ins表：
-    - room：TEXT类型，表示房间号
-    - check_in_time：存储入住时间的字段，具体类型取决于你希望使用的时间表示方式
-    - check_out_time：存储退房时间的字段，具体类型取决于你希望使用的时间表示方式
-    - timestamp：存储时间戳的字段，用于记录操作发生的时间
-
-明确了需求，现在我们就来着手创建一下，`CREATE TABLE`语句的基本语法如下:
-
-```
-CREATE TABLE database_name.table_name(
-   column1 datatype  PRIMARY KEY(one or more columns),
-   column2 datatype,
-   column3 datatype,
-   .....
-   columnN datatype,
-);
-```
-
-> 注：`database_name`在你选定好数据库的时候可以省略
-
-对于我们的项目而言，可以创建这样的表（虽然大小写不敏感，但还是区分为好）:
-
-```
-sqlite> CREATE TABLE records(
-   id INT PRIMARY KEY     NOT NULL,
-   room           TEXT    NOT NULL
-);
-```
-
-> 注：`NOT NULL`的约束表示在表中创建纪录时这些字段不能为`NULL`
-
-你可以使用以下命令来查看表是否被成功创建:
-
 ```
 sqlite>.tables
 ```
 
-更进一步地，你可以使用以下命令得到表的完整信息:
+### 2. 创建表命令（如果是 clone 的 Repo 则可以略过此步）
+
+你可以使用以下命令得到表的完整信息:
 
 ```
 sqlite>.schema table_name
@@ -141,7 +101,7 @@ sqlite>.schema table_name
 
 ![image](/img/1.png)
 
-### 3. 完整的创建表命令
+> 以下是创建表的命令，如果你是 clone 的则不需要创建。
 
 ```
 sqlite> CREATE TABLE Users(
@@ -179,3 +139,25 @@ sqlite> CREATE TABLE Reports(
 );
 ```
 
+### 3. 启动 Web Server
+
+切换回 `backend` 目录，保证 Sqlite 运行的情况下，输入 `python cli.py run` 运行
+
+你可以看到 Server 被启动，可以点击访问
+
+![image](/img/2.png)
+
+比如你可以访问 `http://127.0.0.1:11451/hello`
+
+或者你使用登录功能，访问 `http://127.0.0.1:11451/login`，参数在 Body 里写这样的 json:
+
+```
+{
+  "username": "admin",
+  "password": "admin"
+}
+```
+
+![image](/img/3.png)
+
+退出登录的话，就 `http://127.0.0.1:11451/login`

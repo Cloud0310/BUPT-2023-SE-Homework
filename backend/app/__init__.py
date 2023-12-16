@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_cors import CORS
 
 # 创建 SQLAlchemy 实例
 db = SQLAlchemy()
@@ -8,6 +9,7 @@ migrate = Migrate()
 
 def create_app():
     app = Flask(__name__)
+    CORS(app)
 
     # Import config
     app.config.from_object("app.config.Config")

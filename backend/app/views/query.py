@@ -2,8 +2,10 @@ from flask import Blueprint, request, jsonify
 from app.models import Room, Status
 from app import db
 from sqlalchemy import desc
+from flask_cors import CORS
 
 query_blueprint = Blueprint("query", __name__)
+CORS(query_blueprint)
 
 @query_blueprint.route("/status/<room_id>", methods=["GET"])
 def get_status(room_id):

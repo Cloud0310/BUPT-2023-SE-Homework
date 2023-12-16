@@ -1,7 +1,8 @@
 from flask import Blueprint, request, jsonify
+from flask_cors import CORS
 
 client_blueprint = Blueprint("client", __name__)
-
+CORS(client_blueprint)
 
 # Judge whether the client is online
 @client_blueprint.route("/device/client", methods=["POST"])

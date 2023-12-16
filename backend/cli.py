@@ -1,9 +1,9 @@
+from app import create_app
+from flask_cors import CORS
 from flask.cli import FlaskGroup
 
-from app import create_app
-
-app = create_app()
-cli = FlaskGroup(app)
-
 if __name__ == "__main__":
-    cli()
+    app = create_app()
+    CORS(app)
+    cli = FlaskGroup(app)
+    app.run(host="0.0.0.0", port=11451)
