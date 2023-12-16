@@ -99,7 +99,7 @@ sqlite>.tables
 sqlite>.schema table_name
 ```
 
-![image](./backend/img/1.png)
+![image](../backend/img/1.png)
 
 > 以下是创建表的命令，如果你是 clone 的则不需要创建。
 
@@ -145,7 +145,7 @@ sqlite> CREATE TABLE Reports(
 
 你可以看到 Server 被启动，可以点击访问
 
-![image](./backend/img/2.png)
+![image](../backend/img/2.png)
 
 比如你可以访问 `http://127.0.0.1:11451/hello`
 
@@ -158,6 +158,6 @@ sqlite> CREATE TABLE Reports(
 }
 ```
 
-![image](./backend/img/3.png)
+![image](../backend/img/3.png)
 
 退出登录的话，就 `http://127.0.0.1:11451/login`
