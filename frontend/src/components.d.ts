@@ -22,7 +22,6 @@ declare module 'vue' {
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
-    LineAnalsis: typeof import('./components/LineAnalsis.vue')['default']
     LineCostAnalysis: typeof import('./components/LineCostAnalysis.vue')['default']
     Login: typeof import('./components/Login.vue')['default']
     PageHeader: typeof import('./components/PageHeader.vue')['default']

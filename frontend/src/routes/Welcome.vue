@@ -29,7 +29,7 @@
           <el-input v-model="username" placeholder="请输入用户名" clearable />
           <el-input v-model="password" placeholder="请输入密码" clearable type="password" show-password />
           <div class="flex justify-end">
-            <el-button type="primary" @click="showLoginPanel = false" style="--el-color-primary-light-3: #ddd6fe" small
+            <el-button type="primary" @click="handleLogin" style="--el-color-primary-light-3: #ddd6fe" small
               >登录</el-button
             >
           </div>
@@ -40,7 +40,22 @@
 </template>
 
 <script lang="ts" setup>
+import { ref } from 'vue';
+import { login } from '../utils/requests.ts';
+
 const showLoginPanel = ref(false);
 const username = ref("");
 const password = ref("");
+
+const handleLogin = () => {
+  login(username.value, password.value, (data) => {
+    console.log('登录成功:', data);
+    ElMessage({ message: "登录成功！欢迎使用！", type: "success" });
+  }, (errorCode) => {
+    console.error('登录错误:', errorCode);
+    ElMessage.error('登录失败！请检查用户名和密码。');
+  });
+  showLoginPanel.value = false;
+};
+
 </script>
