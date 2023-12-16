@@ -1,5 +1,10 @@
 <template>
-  <v-chart class="h-96 w-[500px]" :option="option as EChartsOption" />
+  <div class="flex flex-col">
+    <el-select v-model="currentOption" class="w-[15rem] self-end" placeholder="本月净收入" size="small">
+      <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+    </el-select>
+    <v-chart class="h-96 w-96" :option="(option as any)" />
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -7,7 +12,6 @@ import { use } from "echarts/core";
 import { CanvasRenderer } from "echarts/renderers";
 import { LineChart } from "echarts/charts";
 import { UniversalTransition } from "echarts/features";
-import type { EChartsOption } from "echarts";
 
 import {
   TitleComponent,
@@ -19,6 +23,41 @@ import {
 } from "echarts/components";
 import VChart, { THEME_KEY } from "vue-echarts";
 import { ref, provide } from "vue";
+
+const income = Array.from({ length: 30 }, () => Math.floor(Math.random() * (1000 - 500 + 1)) + 500);
+console.log(income)
+const cost = Array.from({ length: 30 }, () => Math.floor(Math.random() * (500 - 300 + 1)) + 300);
+const netIncome = Array.from({ length: cost.length }, (_, index) => income[index] - cost[index]);
+
+
+const currentOption = ref("净收入");
+
+const options = [
+  {
+    value: "收入",
+    label: "本月收入情况"
+  },
+  {
+    value: "净收入",
+    label: "本月净收入情况"
+  },
+  {
+    value: "支出",
+    label: "本月支出情况"
+  }
+];
+
+const currentData = computed(()=> {
+  switch (currentOption.value) {
+    case "收入":
+      console.log(income)
+      return income;
+    case "净收入":
+      return netIncome;
+    case "支出":
+      return cost;
+  }
+})
 
 use([
   TitleComponent,
@@ -34,10 +73,9 @@ use([
 
 provide(THEME_KEY, "light");
 
-const option = ref<EChartsOption>({
+const option = ref<any>({
   title: {
-    text: "Distribution of Electricity",
-    subtext: "Fake Data"
+    text: "本月收支情况"
   },
   tooltip: {
     trigger: "axis",
@@ -45,88 +83,18 @@ const option = ref<EChartsOption>({
       type: "cross"
     }
   },
-  toolbox: {
-    show: true,
-    feature: {
-      saveAsImage: {}
-    }
-  },
+
   xAxis: {
     type: "category",
-    boundaryGap: false,
-    // prettier-ignore
-    data: ['00:00', '01:15', '02:30', '03:45', '05:00', '06:15', '07:30', '08:45', '10:00', '11:15', '12:30', '13:45', '15:00', '16:15', '17:30', '18:45', '20:00', '21:15', '22:30', '23:45']
+    data: Array.from({ length: 30 }, (_, index) => index + 1).map(String)
   },
   yAxis: {
-    type: "value",
-    axisLabel: {
-      formatter: "{value} W"
-    },
-    axisPointer: {
-      snap: true
-    }
-  },
-  visualMap: {
-    show: false,
-    dimension: 0,
-    pieces: [
-      {
-        lte: 6,
-        color: "green"
-      },
-      {
-        gt: 6,
-        lte: 8,
-        color: "red"
-      },
-      {
-        gt: 8,
-        lte: 14,
-        color: "green"
-      },
-      {
-        gt: 14,
-        lte: 17,
-        color: "red"
-      },
-      {
-        gt: 17,
-        color: "green"
-      }
-    ]
+    type: "value"
   },
   series: [
     {
-      name: "Electricity",
-      type: "line",
-      smooth: true,
-      // prettier-ignore
-      data: [300, 280, 250, 260, 270, 300, 550, 500, 400, 390, 380, 390, 400, 500, 600, 750, 800, 700, 600, 400],
-      markArea: {
-        itemStyle: {
-          color: "rgba(255, 173, 177, 0.4)"
-        },
-        data: [
-          [
-            {
-              name: "Morning Peak",
-              xAxis: "07:30"
-            },
-            {
-              xAxis: "10:00"
-            }
-          ],
-          [
-            {
-              name: "Evening Peak",
-              xAxis: "17:30"
-            },
-            {
-              xAxis: "21:15"
-            }
-          ]
-        ]
-      }
+      data: currentData,
+      type: "line"
     }
   ]
 });

@@ -10,7 +10,6 @@ declare module 'vue' {
     DeviceStatusCard: typeof import('./components/DeviceStatusCard.vue')['default']
     Echart1: typeof import('./components/Echart1.vue')['default']
     Echart2: typeof import('./components/Echart2.vue')['default']
-    Echarts: typeof import('./components/Echarts.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCard: typeof import('element-plus/es')['ElCard']
     ElDialog: typeof import('element-plus/es')['ElDialog']
