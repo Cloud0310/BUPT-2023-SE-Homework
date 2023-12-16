@@ -1,9 +1,9 @@
 <template>
-  <div class="flex flex-col">
-    <el-select v-model="currentOption" class="w-[15rem] self-end" placeholder="本月净收入" size="small">
+  <div class="flex flex-col gap-2">
+    <el-select v-model="currentOption" class="w-[10rem] self-end" placeholder="本月净收入" size="small">
       <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
     </el-select>
-    <v-chart class="h-96 w-96" :option="(option as any)" />
+    <v-chart class="h-96" :option="option as any" />
   </div>
 </template>
 
@@ -25,10 +25,9 @@ import VChart, { THEME_KEY } from "vue-echarts";
 import { ref, provide } from "vue";
 
 const income = Array.from({ length: 30 }, () => Math.floor(Math.random() * (1000 - 500 + 1)) + 500);
-console.log(income)
+console.log(income);
 const cost = Array.from({ length: 30 }, () => Math.floor(Math.random() * (500 - 300 + 1)) + 300);
 const netIncome = Array.from({ length: cost.length }, (_, index) => income[index] - cost[index]);
-
 
 const currentOption = ref("净收入");
 
@@ -47,17 +46,17 @@ const options = [
   }
 ];
 
-const currentData = computed(()=> {
+const currentData = computed(() => {
   switch (currentOption.value) {
     case "收入":
-      console.log(income)
+      console.log(income);
       return income;
     case "净收入":
       return netIncome;
     case "支出":
       return cost;
   }
-})
+});
 
 use([
   TitleComponent,
@@ -77,13 +76,13 @@ const option = ref<any>({
   title: {
     text: "本月收支情况"
   },
+  color: "#a78bfa",
   tooltip: {
     trigger: "axis",
     axisPointer: {
       type: "cross"
     }
   },
-
   xAxis: {
     type: "category",
     data: Array.from({ length: 30 }, (_, index) => index + 1).map(String)
@@ -94,7 +93,8 @@ const option = ref<any>({
   series: [
     {
       data: currentData,
-      type: "line"
+      type: "line",
+      smooth: true
     }
   ]
 });

@@ -1,5 +1,7 @@
 <template>
-  <v-chart class="h-96 w-96" :option="(option as EChartsOption)" />
+  <div>
+    <v-chart class="h-96" :option="option as EChartsOption" />
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -32,13 +34,17 @@ const option = ref<EChartsOption>({
   },
   series: [
     {
-      name: "Traffic Sources",
+      name: "金额",
       type: "pie",
-      radius: ['40%', '70%'],
-      color: ['#9333ea','#d946ef'],
+      radius: ["40%", "70%"],
+      color: ["#a78bfa", "#8b5cf6"],
+      itemStyle: {
+        borderRadius: 10,
+        borderWidth: 1
+      },
       data: [
         { value: 700, name: "收入" },
-        { value: 310, name: "支出" },
+        { value: 310, name: "支出" }
       ],
       emphasis: {
         itemStyle: {

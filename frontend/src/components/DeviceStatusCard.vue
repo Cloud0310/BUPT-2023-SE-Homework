@@ -76,8 +76,8 @@
           <el-slider
             v-model="temperature"
             vertical
-            :max="35"
-            :min="0"
+            :max="maxTemperature"
+            :min="minTemperature"
             :marks="marks"
             placement="right"
             :disabled="!on"
@@ -168,16 +168,12 @@ const modeOptions = [
   {
     value: "auto",
     label: "自动"
-  },
-  {
-    value: "off",
-    label: "关闭"
   }
 ];
 
 const marks = {
-  10: "10℃",
-  20: "20℃"
+  20: "20℃",
+  25: "25℃"
 };
 
 interface roomStatus {
@@ -190,10 +186,14 @@ interface roomStatus {
   lastUpdate: Date;
 }
 
+function dateConverter(date: string) {
+  return new Date(date).toLocaleDateString("zh-cn", dateOptions as Intl.DateTimeFormatOptions);
+}
+
 const billData = [
   {
-    startTime: new Date("01-01 00:12:00").toLocaleString("zh-cn", dateOptions as any),
-    endTime: new Date("01-01 01:12:00").toLocaleString("zh-cn", dateOptions as any),
+    startTime: dateConverter("01-01 00:12:00"),
+    endTime: dateConverter("01-01 01:12:00"),
     temperature: "25℃",
     wind_speed: "2",
     mode: "制冷",
@@ -202,8 +202,8 @@ const billData = [
     cost: "10 元"
   },
   {
-    startTime: new Date("01-01 02:12:00").toLocaleString("zh-cn", dateOptions as any),
-    endTime: new Date("01-01 03:12:00").toLocaleString("zh-cn", dateOptions as any),
+    startTime: dateConverter("01-01 02:12:00"),
+    endTime: dateConverter("01-01 03:12:00"),
     temperature: "18℃",
     wind_speed: "3",
     mode: "制冷",
@@ -212,8 +212,8 @@ const billData = [
     cost: "5 元"
   },
   {
-    startTime: new Date("01-01 04:12:00").toLocaleString("zh-cn", dateOptions as any),
-    endTime: new Date("01-01 05:12:00").toLocaleString("zh-cn", dateOptions as any),
+    startTime: dateConverter("01-01 04:12:00"),
+    endTime: dateConverter("01-01 05:12:00"),
     temperature: "25℃",
     wind_speed: "2",
     mode: "制冷",
@@ -222,8 +222,8 @@ const billData = [
     cost: "10 元"
   },
   {
-    startTime: new Date("01-01 06:12:00").toLocaleString("zh-cn", dateOptions as any),
-    endTime: new Date("01-01 07:12:00").toLocaleString("zh-cn", dateOptions as any),
+    startTime: dateConverter("01-01 06:12:00"),
+    endTime: dateConverter("01-01 07:12:00"),
     temperature: "18℃",
     wind_speed: "3",
     mode: "制冷",
@@ -232,8 +232,8 @@ const billData = [
     cost: "5 元"
   },
   {
-    startTime: new Date("01-01 08:12:00").toLocaleString("zh-cn", dateOptions as any),
-    endTime: new Date("01-01 09:12:00").toLocaleString("zh-cn", dateOptions as any),
+    startTime: dateConverter("01-01 08:12:00"),
+    endTime: dateConverter("01-01 09:12:00"),
     temperature: "25℃",
     wind_speed: "2",
     mode: "制冷",
@@ -242,8 +242,8 @@ const billData = [
     cost: "10 元"
   },
   {
-    startTime: new Date("01-01 10:12:00").toLocaleString("zh-cn", dateOptions as any),
-    endTime: new Date("01-01 11:12:00").toLocaleString("zh-cn", dateOptions as any),
+    startTime: dateConverter("01-01 10:12:00"),
+    endTime: dateConverter("01-01 11:12:00"),
     temperature: "18℃",
     wind_speed: "3",
     mode: "制冷",
@@ -252,8 +252,8 @@ const billData = [
     cost: "5 元"
   },
   {
-    startTime: new Date("01-01 12:12:00").toLocaleString("zh-cn", dateOptions as any),
-    endTime: new Date("01-01 13:12:00").toLocaleString("zh-cn", dateOptions as any),
+    startTime: dateConverter("01-01 12:12:00"),
+    endTime: dateConverter("01-01 13:12:00"),
     temperature: "25℃",
     wind_speed: "2",
     mode: "制冷",
@@ -290,7 +290,7 @@ const on = ref(true);
 const currentMode = ref(on ? "cool" : "off");
 const sweeping = ref(on ? true : false);
 const temperature = ref(Math.floor(Math.random() * 30));
-const minTemperature = 0;
+const minTemperature = 15;
 const maxTemperature = 35;
 const fanSpeed = ref(on.value ? 1 : 0);
 const lastUpdate = ref<Date>(new Date());
