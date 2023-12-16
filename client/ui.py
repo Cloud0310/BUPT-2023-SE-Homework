@@ -23,6 +23,7 @@ from cryptography.hazmat.primitives.asymmetric import padding
 # 定义全局变量
 global_state = "stop"
 base_url = "http://localhost:11451/api/device/client"
+DEBOUNCE_TIME = 2000
 
 
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
@@ -79,6 +80,11 @@ class ui_Form(object):
         self.sweep = "on"
         self.state = "stop"
         self.room_id = "2-233"  # 假设的房间号
+
+        self.temp_update_timer = QtCore.QTimer(self)
+        self.temp_update_timer.setInterval(DEBOUNCE_TIME)
+        self.temp_update_timer.timeout.connect(self.send_temperature_update)
+        self.temp_update_timer.setSingleShot(True)  # 设置计时器为单次触发
 
         # 启动 HTTP 服务器线程
         threading.Thread(target=run_server, daemon=True).start()
@@ -249,12 +255,21 @@ class ui_Form(object):
     def increaseTemperature(self):
         self.temperature += 1  # 增加温度
         self.updateTemperatureLabel()
-        self.send_operation_request("temperature", str(self.temperature))
+        self.reset_temp_update_timer()
 
     def decreaseTemperature(self):
         self.temperature -= 1  # 减少温度
         self.updateTemperatureLabel()
+        self.reset_temp_update_timer()
+
+    def send_temperature_update(self):
+        # 当计时器到达间隔时，发送更新请求
+        # print("Sending temperature update:", self.temperature)
         self.send_operation_request("temperature", str(self.temperature))
+
+    def reset_temp_update_timer(self):
+        self.temp_update_timer.stop()
+        self.temp_update_timer.start()
 
     def toggleMode(self):
         if self.current_mode == "cold":
