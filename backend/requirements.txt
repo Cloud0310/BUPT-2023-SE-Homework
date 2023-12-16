@@ -4,3 +4,4 @@ sqlalchemy~=2.0.23
 flask-cors
 Flask-SQLAlchemy
 Flask-Migrate
+rsa

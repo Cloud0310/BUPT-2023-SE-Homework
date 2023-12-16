@@ -1,21 +1,18 @@
 from flask import Blueprint, request, jsonify, session
 from app import db
+from app.scheduler import RoomScheduler, room_scheduler_map
 from app.utils import check_csrf_token
 from app.models import Device, Room, Status
-from flask_cors import CORS
 
 admin_blueprint = Blueprint("admin", __name__)
-CORS(admin_blueprint)
 
-@admin_blueprint.route("/admin/device", methods=["PUT"])
+@admin_blueprint.route("/api/admin/device", methods=["PUT"])
 def add_device():
     if "user_id" not in session:
         return jsonify({"error": "Unauthorized"}), 401
 
-    # if not check_csrf_token(request): 
+    # if not check_csrf_token(request.json.get('csrf_token')):
     #     return jsonify({"error": "CSRF token mismatch"}), 403
-    if not check_csrf_token(request.json.get('csrf_token')):
-        return jsonify({"error": "CSRF token mismatch"}), 403
 
     data = request.get_json()
     if not data:
@@ -28,15 +25,17 @@ def add_device():
     db.session.add(device)
     db.session.commit()
 
+    room_scheduler_map[room.id] = RoomScheduler(room.id, 25, 25)
+
     return jsonify({"room": device.room}), 200
 
-@admin_blueprint.route("/admin/device", methods=["DELETE"])
+@admin_blueprint.route("/api/admin/device", methods=["DELETE"])
 def remove_device():
     if "user_id" not in session:
         return jsonify({"error": "Unauthorized"}), 401
 
-    if not check_csrf_token(request):
-        return jsonify({"error": "CSRF token mismatch"}), 403
+    # if not check_csrf_token(request):
+    #     return jsonify({"error": "CSRF token mismatch"}), 403
 
     data = request.get_json()
     if not data:
@@ -52,13 +51,13 @@ def remove_device():
     else:
         return jsonify({"error": "Device not found"}), 404
 
-@admin_blueprint.route("/admin/devices", methods=["GET"])
+@admin_blueprint.route("/api/admin/devices", methods=["GET"])
 def get_all_devices():
     if "user_id" not in session:
         return jsonify({"error": "Unauthorized"}), 401
 
-    if not check_csrf_token(request):
-        return jsonify({"error": "CSRF token mismatch"}), 403
+    # if not check_csrf_token(request):
+    #     return jsonify({"error": "CSRF token mismatch"}), 403
 
     devices = Device.query.all()
     device_list = [device.room for device in devices]

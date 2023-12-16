@@ -1,20 +1,26 @@
-from flask import Blueprint, request, jsonify
-from app.models import Room, Status
+from flask import Blueprint, request, jsonify, session
+from app.models import Status, Device
 from app import db
 from sqlalchemy import desc
-from flask_cors import CORS
 
 query_blueprint = Blueprint("query", __name__)
-CORS(query_blueprint)
 
-@query_blueprint.route("/status/<room_id>", methods=["GET"])
+@query_blueprint.route("/api/status/<room_id>", methods=["GET"])
 def get_status(room_id):
-    room = Room.query.filter_by(numbers=room_id).first()
+    if "user_id" not in session:
+        return jsonify({"error": "Unauthorized"}), 401
+
+    room = Device.query.filter_by(room=room_id).first()
     if room:
-        status = Status.query.filter_by(room_id=room.id).order_by(desc(Status.last_update)).first()
+        status = (
+            Status.query.filter_by(room_id=room.id)
+            .order_by(desc(Status.last_update))
+            .first()
+        )
+
         if status:
             response_data = {
-                "room": room.id,
+                "room": room.room,
                 "temperature": status.temperature,
                 "wind_speed": status.wind_speed,
                 "mode": status.mode,
@@ -24,15 +30,28 @@ def get_status(room_id):
             }
             return jsonify(response_data), 200
         else:
-            return jsonify({"error": "Status not found"}), 404
+            response_data = {
+                "room": room.room,
+                "temperature": -1,
+                "wind_speed": 0,
+                "mode": "-",
+                "sweep": False,
+                "is_on": False,
+                "last_update": "-1",
+            }
+            return jsonify(response_data), 200
     else:
         return jsonify({"error": "Room not found"}), 404
 
-@query_blueprint.route("/status", methods=["GET"])
+
+@query_blueprint.route("/api/status", methods=["GET"])
 def get_all_status():
-    rooms = Room.query.all()
+    if "user_id" not in session:
+        return jsonify({"error": "Unauthorized"}), 401
+
+    all_room = Device.query.all()
     response_data = []
-    for room in rooms:
+    for room in all_room:
         status = (
             Status.query.filter_by(room_id=room.id)
             .order_by(desc(Status.last_update))
@@ -40,8 +59,14 @@ def get_all_status():
         )
         if status:
             room_data = {
-                "room": room.id,
+                "room": room.room,
                 "is_on": status.is_on,
+            }
+            response_data.append(room_data)
+        else:
+            room_data = {
+                "room": room.room,
+                "is_on": False,
             }
             response_data.append(room_data)
     return jsonify(response_data), 200

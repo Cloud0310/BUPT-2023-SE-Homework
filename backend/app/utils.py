@@ -1,55 +1,17 @@
-from flask import request
-from flask import session
-import threading
-import time
-from queue import Queue
+from rsa import VerificationError
+import base64
+import rsa
 
+# Check if the csrf token is valid
+def check_csrf_token(requests):
+    csrf_token = requests.headers.get("X-CSRF-Token")
+    return 1
 
-def check_csrf_token(token):
-    if token == session.get('csrf_token'):
+# Generate a timestamp id
+def verify_signature(verify_str, public_key, signature):
+    public_key_parsed = rsa.PublicKey.load_pkcs1_openssl_pem(("-----BEGIN PUBLIC KEY-----\n" + public_key + "\n-----END PUBLIC KEY-----").encode())
+    try:
+        rsa.verify(verify_str.encode(), base64.urlsafe_b64decode(signature.encode()), public_key_parsed)
         return True
-    return False
-
-
-def dispatch():
-    pass
-
-
-# Waiting for test
-"""
-def dispatch():
-    # Create a queue to hold the tasks
-    task_queue = Queue()
-    
-    # Add tasks to the queue
-    task_queue.put(task1)
-    task_queue.put(task2)
-    task_queue.put(task3)
-    # ...
-    
-    # Create worker threads to process the tasks
-    num_workers = 4
-    workers = []
-    
-    for _ in range(num_workers):
-        worker = threading.Thread(target=process_task, args=(task_queue,))
-        worker.start()
-        workers.append(worker)
-    
-    # Wait for all tasks to be processed
-    task_queue.join()
-    
-    # Stop the worker threads
-    for worker in workers:
-        worker.join()
-
-# Function to process a task
-def process_task(task_queue):
-    while True:
-        task = task_queue.get()
-        
-        # Process the task here
-        
-        task_queue.task_done()
-
-"""
+    except VerificationError:
+        return False
