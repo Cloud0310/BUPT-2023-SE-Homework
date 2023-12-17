@@ -1,46 +1,50 @@
 from flask import Flask
+from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from flask_cors import CORS
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.asymmetric import padding
-from cryptography.hazmat.primitives.serialization import load_pem_public_key
-from cryptography.exceptions import InvalidSignature
 
-"""
-Hint: __init__.py is a special file that is run when the app is initialized.
-"""
+# 创建 SQLAlchemy 实例
+db = SQLAlchemy()
+migrate = Migrate()
 
-def verify_signature_v2(verify_str, public_key, signature):
-    try:
-        public_key = load_pem_public_key(public_key)
-        public_key.verify(
-            signature,
-            verify_str.encode(),
-            padding.PKCS1v15(),
-            hashes.SHA256()
-        )
-        return True
-    except InvalidSignature:
-        return False
-    
 
-# Create app instance
 def create_app():
-    # Initialize app
     app = Flask(__name__)
+
+    # 配置
+    configure_app(app)
+
+    # 初始化扩展
+    initialize_extensions(app)
+
+    # 注册蓝图
+    register_blueprints(app)
+
+    return app
+
+
+def configure_app(app):
+    # 添加CORS支持
     CORS(app, origins="*", supports_credentials=True)
 
-    # Import config
+    # 导入配置
     app.config.from_object("app.config.Config")
+
+    # 修改 host 和 port
     app.config["HOST"] = "0.0.0.0"
     app.config["PORT"] = 11451
 
-    # Initialize extensions
+
+def initialize_extensions(app):
+    # 初始化数据库扩展
     db.init_app(app)
+
+    # 初始化迁移扩展
     migrate.init_app(app, db)
 
-    # Register blueprints
+
+def register_blueprints(app):
+    # 导入蓝图
     from app.views.auth import auth_blueprint
     from app.views.query import query_blueprint
     from app.views.room import room_blueprint
@@ -48,7 +52,7 @@ def create_app():
     from app.views.control import control_blueprint
     from app.views.client import client_blueprint
 
-    # Register blueprints
+    # 注册蓝图
     app.register_blueprint(auth_blueprint)
     app.register_blueprint(query_blueprint)
     app.register_blueprint(room_blueprint)
@@ -56,8 +60,7 @@ def create_app():
     app.register_blueprint(control_blueprint)
     app.register_blueprint(client_blueprint)
 
-    return app
 
-# Create SQLAlchemy instance
-db = SQLAlchemy()
-migrate = Migrate()
+if __name__ == "__main__":
+    app = create_app()
+    app.run()
