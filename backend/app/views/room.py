@@ -3,7 +3,7 @@ from flask import Blueprint, request, jsonify, session
 from sqlalchemy import desc
 from app import db
 from app.datamodel import Status, Device
-from app.utils import check_csrf_token
+from app.tool import check_csrf_token
 
 room_blueprint = Blueprint("room", __name__)
 
