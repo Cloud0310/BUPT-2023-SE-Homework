@@ -109,29 +109,43 @@
         <el-button v-if="!isCheckedIn" @click="handleCheckin"> 入住 </el-button>
         <el-button v-else @click="handleCheckout"> 退房 </el-button>
         <el-dialog v-model="showBillDialog" center title="账单" append-to-body>
-          <el-table :data="billDetails" stripe>
-            <el-table-column prop="start_time" label="开始时间" width="120" />
-            <el-table-column prop="end_time" label="结束时间" width="120" />
-            <el-table-column prop="temperature" label="温度" />
-            <el-table-column prop="wind_speed" label="风速" />
-            <el-table-column prop="mode" label="模式" />
-            <el-table-column prop="sweep" label="扫风" />
-            <el-table-column prop="duration" label="时长" />
-            <el-table-column prop="cost" label="费用" fixed="right" />
-          </el-table>
+          <el-table :data="[billData]" stripe>
+            <el-table-column prop="totalCost" label="总费用" width="120" />
+            <el-table-column prop="totalDuration" label="总时长" width="120" />
+          </el-table>          
+          <template>
+            <el-dialog v-model="showDetailsDialog" center title="详单" append-to-body>
+              <el-table :data="billDetails" stripe>
+              <el-table-column prop="start_time" label="开始时间" width="120" />
+              <el-table-column prop="end_time" label="结束时间" width="120" />
+              <el-table-column prop="temperature" label="温度" />
+              <el-table-column prop="wind_speed" label="风速" />
+              <el-table-column prop="mode" label="模式" />
+              <el-table-column prop="sweep" label="扫风" />
+              <el-table-column prop="duration" label="时长" />
+              <el-table-column prop="cost" label="费用" fixed="right" />
+            </el-table>
+            <template #footer>
+              <span class="dialog-footer flex justify-end">
+                <el-button @click="printDetails">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" class="h-6 w-6" style="filter: grayscale(0.5);">
+                      <path
+                          fill="currentColor"
+                          d="M640-640v-120H320v120h-80v-200h480v200h-80Zm-480 80h640-640Zm560 100q17 0 28.5-11.5T760-500q0-17-11.5-28.5T720-540q-17 0-28.5 11.5T680-500q0 17 11.5 28.5T720-460Zm-80 260v-160H320v160h320Zm80 80H240v-160H80v-240q0-51 35-85.5t85-34.5h560q51 0 85.5 34.5T880-520v240H720v160Zm80-240v-160q0-17-11.5-28.5T760-560H200q-17 0-28.5 11.5T160-520v160h80v-80h480v80h80Z" 
+                        />
+                  </svg>
+                  <span>打印详单</span>
+                </el-button>
+              </span>
+            </template>  
+            </el-dialog>
+          </template>
           <template #footer>
-            <span class="dialog-footer flex justify-end">
-              <el-button @click="printDetails">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" class="h-6 w-6" style="filter: grayscale(0.5);">
-                    <path
-                        fill="currentColor"
-                        d="M640-640v-120H320v120h-80v-200h480v200h-80Zm-480 80h640-640Zm560 100q17 0 28.5-11.5T760-500q0-17-11.5-28.5T720-540q-17 0-28.5 11.5T680-500q0 17 11.5 28.5T720-460Zm-80 260v-160H320v160h320Zm80 80H240v-160H80v-240q0-51 35-85.5t85-34.5h560q51 0 85.5 34.5T880-520v240H720v160Zm80-240v-160q0-17-11.5-28.5T760-560H200q-17 0-28.5 11.5T160-520v160h80v-80h480v80h80Z" 
-                      />
-                </svg>
-                <span>打印详单</span>
-              </el-button>
+            <span class="dialog-footer">
+              <!-- <el-button type="primary" @click="printBill">打印账单</el-button> -->
+              <el-button type="primary" @click="showDetailsDialog = true">查看详单</el-button>
             </span>
-          </template>    
+          </template>  
         </el-dialog>
       </div>
       <span class="text-xs text-neutral-500"
@@ -190,6 +204,7 @@ const marks = {
 
 const isCheckedIn = ref<boolean>(true);
 const showBillDialog = ref<boolean>(false);
+const showDetailsDialog = ref<boolean>(false);
 
 const on = ref(true);
 const currentMode = ref(3);
@@ -239,8 +254,8 @@ function handleCheckout() {
       on.value = false;
       fanSpeed.value = 0;
 
-      totalCost.value = data.report.total_cost;
-      totalDuration.value = data.report.total_duration;
+      billData.totalCost.value = data.report.total_cost;
+      billData.totalDuration.value = data.report.total_duration;
       billDetails.value = data.report.details;
       billDetails.value.forEach(val => {
         val.start_time = dateConverter(val.start_time);
@@ -255,9 +270,12 @@ function handleCheckout() {
     }
   );
 }
-
-const totalCost = ref<number>(0);
-const totalDuration = ref<number>(0);
+const billData = {
+  totalCost: ref<number>(0),
+  totalDuration: ref<number>(0),
+};
+// const totalCost = ref<number>(0);
+// const totalDuration = ref<number>(0);
 const billDetails = ref<DeviceData[]>([]);
 
 function dateConverter(date: string) {
@@ -343,7 +361,6 @@ onMounted(() => {
 onUnmounted(() => {
   clearInterval(intervalId);
 });
-
 
 
 
