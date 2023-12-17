@@ -50,12 +50,12 @@ const password = ref("");
 const handleLogin = () => {
   login(username.value, password.value, (data) => {
     console.log('登录成功:', data);
-    ElMessage({ showClose: true,message: "登录成功！欢迎使用！", type: "success" });
-    showLoginPanel.value = false;
+    ElMessage({ message: "登录成功！欢迎使用！", type: "success" });
   }, (errorCode) => {
     console.error('登录错误:', errorCode);
-    ElMessage({ showClose: true,message: "登录失败！请检查用户名和密码。", type: "error" });
+    ElMessage.error('登录失败！请检查用户名和密码。');
   });
+  showLoginPanel.value = false;
 };
 
 </script>

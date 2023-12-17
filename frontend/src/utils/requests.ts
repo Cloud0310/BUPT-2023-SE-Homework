@@ -152,28 +152,13 @@ export interface DeviceData {
     cost: number;
 }
 
-// export function addDevice(
-//     csrfToken: string,
-//     deviceData: any,
-//     successCallback: (data: any) => void,
-//     errorCallback: (errorCode: number) => void
-// ) {
-//     createWithCSRFToken(protocol.put, "/admin/device", csrfToken, deviceData).then(
-//         data => successCallback(data),
-//         errorCode => errorCallback(errorCode)
-//     );
-// }
 export function addDevice(
     csrfToken: string,
-    deviceId: string,
-    deviceKey: string,
+    deviceData: any,
     successCallback: (data: any) => void,
     errorCallback: (errorCode: number) => void
 ) {
-    createWithCSRFToken(protocol.put, "/admin/device", csrfToken, {
-        deviceId: deviceId,
-        deviceKey: deviceKey,
-    }).then(
+    createWithCSRFToken(protocol.put, "/admin/device", csrfToken, deviceData).then(
         data => successCallback(data),
         errorCode => errorCallback(errorCode)
     );

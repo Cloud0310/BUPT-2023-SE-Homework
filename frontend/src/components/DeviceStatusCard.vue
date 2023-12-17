@@ -106,40 +106,21 @@
     <!-- last update time -->
     <div class="flex justify-between">
       <div>
-        <el-button v-if="!isCheckedIn" @click="handleCheckIn"> 入住 </el-button>
-        <el-button v-else @click="handleCheckOut">
+        <el-button v-if="!isCheckedIn" @click="isCheckedIn = true"> 入住 </el-button>
+        <el-button v-else @click="(showBillDialog = true), (isCheckedIn = false), (on = false), (fanSpeed = 0)">
           退房
         </el-button>
         <el-dialog v-model="showBillDialog" center title="账单" append-to-body>
-          <el-table :data="[billData]" stripe>
-            <el-table-column prop="total_cost" label="总费用" width="120" />
-            <el-table-column prop="total_duration" label="总时长" width="120" />
+          <el-table :data="billData" stripe>
+            <el-table-column prop="startTime" label="开始时间" width="120" />
+            <el-table-column prop="endTime" label="结束时间" width="120" />
+            <el-table-column prop="temperature" label="温度" />
+            <el-table-column prop="wind_speed" label="风速" />
+            <el-table-column prop="mode" label="模式" />
+            <el-table-column prop="sweep" label="扫风" />
+            <el-table-column prop="duration" label="时长" />
+            <el-table-column prop="cost" label="费用" fixed="right" />
           </el-table>
-          <template>
-            <el-dialog v-model="showDetailsDialog" center title="详单" append-to-body>
-              <el-table :data="detailsData" stripe>
-                <el-table-column prop="startTime" label="开始时间" width="120" />
-                <el-table-column prop="endTime" label="结束时间" width="120" />
-                <el-table-column prop="temperature" label="温度" />
-                <el-table-column prop="wind_speed" label="风速" />
-                <el-table-column prop="mode" label="模式" />
-                <el-table-column prop="sweep" label="扫风" />
-                <el-table-column prop="duration" label="时长" />
-                <el-table-column prop="cost" label="费用" fixed="right" />
-              </el-table>  
-              <template #footer>
-                <span class="dialog-footer">
-                  <el-button type="primary" @click="printDetails">打印详单</el-button>
-                </span>
-              </template>          
-            </el-dialog>
-          </template>
-          <template #footer>
-            <span class="dialog-footer">
-              <el-button type="primary" @click="printBill">打印账单</el-button>
-              <el-button type="primary" @click="showDetailsDialog = true">查看详单</el-button>
-            </span>
-          </template>
         </el-dialog>
       </div>
       <span class="text-xs text-neutral-500"
@@ -160,9 +141,6 @@
 <script lang="ts" setup>
 import { Check, Close } from "@element-plus/icons-vue";
 import P5 from "p5";
-import { checkInRoom } from "../utils/requests";
-// import { checkOutRoom } from "../utils/requests";
-// import { getRoomStatus } from "../utils/requests";
 
 const props = defineProps({
   roomId: {
@@ -170,20 +148,6 @@ const props = defineProps({
     required: true
   }
 });
-
-const handleCheckIn = () => {
-  checkInRoom("csrfToken",props.roomId,
-    (data) => {
-      console.log(data);
-      isCheckedIn.value = true;
-      ElMessage({ showClose: true, message: "入住成功！", type: "success" });
-    },
-    (errorCode) => {
-      console.error(errorCode);
-      ElMessage({ showClose: true, message: "入住失败！", type: "error" });
-    }
-  );
-};
 
 const dateOptions = {
   month: "short",
@@ -226,18 +190,7 @@ function dateConverter(date: string) {
   return new Date(date).toLocaleDateString("zh-cn", dateOptions as Intl.DateTimeFormatOptions);
 }
 
-// const detailsData = ref({
-//     start_time: "",
-//     end_time: "",
-//     temperature: 0,
-//     wind_speed: 0,
-//     mode: "",
-//     sweep: false,
-//     duration: 0,
-//     cost: 0,
-// });
-
-const detailsData = [
+const billData = [
   {
     startTime: dateConverter("01-01 00:12:00"),
     endTime: dateConverter("01-01 01:12:00"),
@@ -332,7 +285,6 @@ function getRoomStatus(
 }
 const isCheckedIn = ref<boolean>(true);
 const showBillDialog = ref<boolean>(false);
-const showDetailsDialog = ref<boolean>(false);
 
 const on = ref(true);
 const currentMode = ref(on ? "cool" : "off");
@@ -414,40 +366,4 @@ onMounted(() => {
 onUnmounted(() => {
   clearInterval(intervalId);
 });
-
-const billData = {
-  total_cost: ref(0),
-  total_duration: ref(0),
-}
-
-const handleCheckOut = () => {
-  showBillDialog.value = true;
-  isCheckedIn.value = false;
-  // //退房
-  // checkOutRoom('csrfToken', props.roomId,
-  //   (data) => {
-  //     console.log(data);
-  //     isCheckedIn.value = false;
-  //     on.value = false;
-  //     fanSpeed.value = 0;
-  //     billData.total_cost.value = data.report.total_cost;
-  //     billData.total_duration.value = data.report.total_duration;
-  //     // detailsData.value = data.report.details;
-  //     showBillDialog.value = true;
-  //   },
-  //   (errorCode) => {
-  //     console.error(errorCode);
-  //     ElMessage({ showClose: true, message: "退房失败！", type: "error" });
-  //   }
-  // );
-};
-
-function printBill(){
-  console.log("打印账单\n",billData);
-  ElMessage({ showClose: true,message: "成功打印账单！", type: "success" });
-}
-function printDetails(){
-  console.log("打印详单\n",detailsData);
-  ElMessage({ showClose: true,message: "成功打印详单！", type: "success" });
-}
 </script>
