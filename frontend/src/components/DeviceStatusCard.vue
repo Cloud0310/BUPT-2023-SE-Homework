@@ -423,7 +423,6 @@ const billData = {
 const handleCheckOut = () => {
   showBillDialog.value = true;
   isCheckedIn.value = false;
-  ElMessage({ message: "退房成功，请查收您的账单！", type: "success" });
   // //退房
   // checkOutRoom('csrfToken', props.roomId,
   //   (data) => {
@@ -435,7 +434,6 @@ const handleCheckOut = () => {
   //     billData.total_duration.value = data.report.total_duration;
   //     // detailsData.value = data.report.details;
   //     showBillDialog.value = true;
-  //     ElMessage({ message: "退房成功，请查收您的账单！", type: "success" });
   //   },
   //   (errorCode) => {
   //     console.error(errorCode);

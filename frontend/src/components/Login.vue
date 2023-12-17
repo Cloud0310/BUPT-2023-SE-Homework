@@ -1,70 +1,84 @@
 <template>
-  <button
-    type="button"
-    class="flex w-[200px] items-center justify-evenly rounded-xl bg-primary-100 p-3"
-    @click="LoginPanel"
-  >
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      class="inline-block h-16 w-16 text-primary-400"
-      viewBox="0 -960 960 960"
+  <Teleport to="body">
+    <div
+      v-if="isLoginPannelEnabled"
+      class="fixed left-0 top-0 z-20 flex h-full w-full items-center justify-center bg-black bg-opacity-50"
     >
-      <path
-        fill="currentColor"
-        d="M480-120v-80h280v-560H480v-80h280q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H480Zm-80-160-55-58 102-102H120v-80h327L345-622l55-58 200 200-200 200Z"
-      />
-    </svg>
-    <span v-if="isLogin" class="inline-block align-middle text-5xl font-bold text-neutral-400"> 退出 </span>
-    <span v-else class="inline-block align-middle text-5xl font-bold text-neutral-400">登录</span>
-  </button>
-  <el-dialog v-model="showLoginPanel" append-to-body title="登录" width="30%">
-    <div class="flex flex-col gap-4 px-12">
-      <el-input v-model="username" placeholder="请输入用户名" clearable />
-      <el-input v-model="password" placeholder="请输入密码" clearable type="password" show-password />
-      <div class="flex justify-end">
-        <el-button type="primary" @click="handleLogin" style="--el-color-primary-light-3: #ddd6fe" small
-          >登录</el-button
+      <div class="relative w-96 rounded-lg bg-white p-8">
+        <p class="top-0 my-10 ml-3 text-3xl font-bold">登录</p>
+        <button
+          class="absolute right-0 top-0 m-3 cursor-pointer border-none bg-transparent text-xl text-neutral-500 outline-none"
+          @click="closePanel"
         >
+          <!-- close button -->
+          <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
+            <path
+              fill="currentColor"
+              d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
+            />
+          </svg>
+        </button>
+        <div>
+          <form action="" class="top-0 my-2 flex flex-col items-start justify-center gap-3">
+            <label for="username" class="ml-3">用户名</label>
+            <input
+              type="text"
+              v-model="username"
+              id="username"
+              class="focus:border-1 h-9 w-full rounded-lg bg-neutral-50 px-3 py-3 caret-neutral-300 shadow-md transition-colors focus-within:border-primary-200 focus:bg-neutral-100 focus:outline-none"
+            />
+            <label for="password" class="ml-3">密码</label>
+            <input
+              type="password"
+              id="password"
+              v-model="password"
+              class="focus:border-1 h-9 w-full rounded-lg bg-neutral-50 px-3 py-3 caret-neutral-300 shadow-md transition-colors focus-within:border-primary-200 focus:bg-neutral-100 focus:outline-none"
+            />
+          </form>
+        </div>
+        <div class="mt-7 flex items-center justify-start gap-4">
+          <button
+            type="button"
+            class="rounded-lg bg-primary-300 px-5 py-2 text-sm text-neutral-50 transition-all hover:bg-primary-400 hover:text-neutral-100"
+            @click="confirmlogin"
+          >
+            登录
+          </button>
+        </div>
       </div>
     </div>
-  </el-dialog>
+  </Teleport>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { login } from '../utils/requests.ts';
+import { ref } from "vue";
 
-const isLogin = ref<boolean>(false);
-const showLoginPanel = ref(false);
+defineProps({
+  isLoginPannelEnabled: { type: Boolean, required: true }
+});
+
+const emits = defineEmits(["close", "login"]);
+const closePanel = () => {
+  emits("close");
+};
+
 const username = ref("");
 const password = ref("");
+const options = ref("前台");
 
-function LoginPanel(){
-  if(!isLogin.value){
-    showLoginPanel.value = true;
-  } else{
-    showLoginPanel.value = false;
-    isLogin.value = false;
-  }
-};
+// const emitsLogin = defineEmits(['login']);
+const isLogin = ref<boolean>(false);
 
-const handleLogin = () => {
-  // if (username.value === "admin" && password.value === "admin") {
-  //   isLogin.value = true;
-  //   showLoginPanel.value = false;
-  //   ElMessage({ message: "登录成功！欢迎使用！", type: "success" });
-  // } else {
-  //   ElMessage({ message: "登录失败！请检查用户名和密码。", type: "error" });
-  // };
-
-  login(username.value, password.value, (data) => {
-    console.log('登录成功:', data);
-    ElMessage({ showClose: true,message: "登录成功！欢迎使用！", type: "success" });
+function confirmlogin() {
+  if (username.value === "admin" && password.value === "admin") {
+    console.log("确认登录");
+    console.log(options.value);
     isLogin.value = true;
-    showLoginPanel.value = false;
-  }, (errorCode) => {
-    console.error('登录错误:', errorCode);
-    ElMessage({ showClose: true,message: "登录失败！请检查用户名和密码。", type: "error" });
-  });
-};
+    emits("login", isLogin.value);
+    ElMessage({ message: "登录成功！欢迎使用！", type: "success" });
+    emits("close");
+  } else {
+    ElMessage({ message: "登录失败！请检查用户名和密码。", type: "error" });
+  }
+}
 </script>
