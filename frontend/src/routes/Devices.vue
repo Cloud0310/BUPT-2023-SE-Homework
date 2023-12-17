@@ -23,9 +23,7 @@
       <el-input v-model="deviceKey" placeholder="请输入新设备公钥" />
     </div>
     <div class="my-4 flex w-full justify-end">
-      <el-button type="primary" @click="addDeviceDialogVisible = false" style="--el-color-primary-light-3: #ddd6fe"
-        >添加</el-button
-      >
+      <el-button type="primary" @click="handleAddDevice" style="--el-color-primary-light-3: #ddd6fe">添加</el-button>
     </div>
   </el-dialog>
 </template>
@@ -33,7 +31,30 @@
 <script lang="ts" setup>
 import PageHeader from "../components/PageHeader.vue";
 import DeviceStatusCard from "../components/DeviceStatusCard.vue";
-import { getAvailableDevices, ERROR_CODE_MAP, UNKNOWN_ERROR } from "../utils/requests";
+import { getAvailableDevices, addDevice, ERROR_CODE_MAP, UNKNOWN_ERROR } from "../utils/requests";
+
+function handleAddDevice() {
+  addDevice(
+    null as any,
+    {
+      deviceID: deviceId.value,
+      deviceKey: deviceKey.value
+    },
+    () => {
+      ElMessage({
+        type: "success",
+        message: "添加成功"
+      });
+      addDeviceDialogVisible.value = false;
+    },
+    err => {
+      ElMessage({
+        type: "error",
+        message: `出现错误${ERROR_CODE_MAP[err] ?? UNKNOWN_ERROR}`
+      });
+    }
+  );
+}
 
 const roomIDs = ref<string[]>([]);
 const addDeviceDialogVisible = ref(false);
