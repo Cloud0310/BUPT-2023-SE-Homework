@@ -1,0 +1,21 @@
+name: Black Format Checker
+on:
+  - push
+jobs:
+  format-check:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        project: [ 'backend', 'client' ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Do format checking
+        uses: reviewdog/action-black@v3
+        with:
+          workdir: ${{ matrix.project }}
+          github_token: ${{ secrets.github_token }}
+          reporter: github-check
+          level: warning

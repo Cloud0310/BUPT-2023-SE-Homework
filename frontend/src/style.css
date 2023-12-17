@@ -3,17 +3,19 @@
 @tailwind utilities;
 
 @font-face {
-    font-family: 'Source Han Sans SC VF';
-    src: local('Source Han Sans SC VF'), url("/fonts/SourceHanSansSC.woff2");
+    font-family: "Source Han Sans SC VF";
+    src: local("Source Han Sans SC VF"), url("/fonts/SourceHanSansSC.woff2");
 }
 
 :root {
-    font-family: 'Source Han Sans SC VF', sans-serif;
+    font-family: "Source Han Sans SC VF", sans-serif;
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -webkit-text-size-adjust: 100%;
+    --el-color-primary: #a78bfa !important;
+    --el-border-radius-small: 0.125rem !important;
 }
 
 #app {
