@@ -18,6 +18,7 @@ TIME_SCHEDULE = 20
 
 
 def client_control(room_id, public_key, operation, value):
+    # 发送控制命令到客户端
     response = requests.post(
         client_remote_map[room_id],
         base64.urlsafe_b64encode(
@@ -27,11 +28,11 @@ def client_control(room_id, public_key, operation, value):
         ).decode(),
     )
     print(
-        "Send control to ",
+        "发送控制命令至",
         client_remote_map[room_id],
-        " with operation ",
+        "，操作为",
         operation,
-        " and value ",
+        "，值为",
         value,
     )
     if response.status_code == 204:
@@ -41,7 +42,9 @@ def client_control(room_id, public_key, operation, value):
 
 
 def make_simple_room_status(room_id, public_key):
+    # 创建简单的房间状态对象
     return RoomStatusEntry(room_id, public_key, 25, 2, "cool", False, False, 0)
+
 
 
 class RoomStatusEntry:
@@ -56,6 +59,7 @@ class RoomStatusEntry:
         is_on,
         last_update,
     ):
+        # 初始化房间状态对象
         self.public_key = rsa.PublicKey.load_pkcs1_openssl_pem(
             (
                 "-----BEGIN PUBLIC KEY-----\n"
@@ -74,6 +78,7 @@ class RoomStatusEntry:
         self.last_temperature_update = last_update
         self.last_start = last_update
         self.ctx = None
+
 
     def put_status(self):
         self.ctx.push()
@@ -132,6 +137,7 @@ class RoomStatusEntry:
 
 class StatusScheduler:
     def __init__(self):
+        # 初始化调度器
         self.ctx = None
         self.room_scheduler_map = {}
         self.waiting_queue = []
@@ -291,5 +297,9 @@ class StatusScheduler:
         Thread(target=self.run_scheduler_thread, daemon=True).start()
 
 
-# 实例化调度器
-scheduler = StatusScheduler()
+def main():
+    # 实例化调度器
+    scheduler = StatusScheduler()
+
+if __name__ == "__main__":
+    main()

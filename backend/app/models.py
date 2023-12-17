@@ -1,23 +1,20 @@
 from app import db
 from datetime import datetime
 
-
-# 每个 class 代表一张表
+# 设备表
 class Device(db.Model):
-    id = db.Column(db.Integer, primary_key=True)  # 将id定义为主键
-    room = db.Column(db.String(255), unique=True, nullable=False)  # room为候选键，不为空
-    public_key = db.Column(db.String(4096), nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    room = db.Column(db.String(255), unique=True, nullable=False)  # 房间名，唯一且不为空
+    public_key = db.Column(db.String(4096), nullable=False)  # 公钥
 
-
-# 储存用户信息
+# 用户表
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), unique=True, nullable=False)
-    password = db.Column(db.String(60), nullable=False)
-    role = db.Column(db.String(10), nullable=False)  # AC admin, checkout, manager
+    username = db.Column(db.String(50), unique=True, nullable=False)  # 用户名，唯一且不为空
+    password = db.Column(db.String(60), nullable=False)  # 密码哈希
+    role = db.Column(db.String(10), nullable=False)  # 角色 (AC admin, checkout, manager)
 
-
-# 设备状态信息
+# 设备状态表
 class Status(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     room_id = db.Column(db.Integer, db.ForeignKey("device.id"), nullable=False)  # 房间号
