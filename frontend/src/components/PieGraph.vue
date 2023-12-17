@@ -1,5 +1,7 @@
 <template>
-  <v-chart class="h-96 w-[500px]" :option="option as EChartsOption" />
+  <div>
+    <v-chart class="h-96" :option="option as EChartsOption" />
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -18,7 +20,7 @@ provide(THEME_KEY, "light");
 
 const option = ref<EChartsOption>({
   title: {
-    text: "Traffic Sources",
+    text: "月度收支情况",
     left: "center"
   },
   tooltip: {
@@ -28,20 +30,21 @@ const option = ref<EChartsOption>({
   legend: {
     orient: "vertical",
     left: "left",
-    data: ["Direct", "Email", "Ad Networks", "Video Ads", "Search Engines"]
+    data: ["收入", "支出"]
   },
   series: [
     {
-      name: "Traffic Sources",
+      name: "金额",
       type: "pie",
-      radius: "55%",
-      center: ["50%", "60%"],
+      radius: ["40%", "70%"],
+      color: ["#a78bfa", "#8b5cf6"],
+      itemStyle: {
+        borderRadius: 10,
+        borderWidth: 1
+      },
       data: [
-        { value: 335, name: "Direct" },
-        { value: 310, name: "Email" },
-        { value: 234, name: "Ad Networks" },
-        { value: 135, name: "Video Ads" },
-        { value: 1548, name: "Search Engines" }
+        { value: 700, name: "收入" },
+        { value: 310, name: "支出" }
       ],
       emphasis: {
         itemStyle: {

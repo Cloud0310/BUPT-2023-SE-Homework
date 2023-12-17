@@ -1,5 +1,5 @@
 <template>
-  <PageHeader page-title="首页" />
+  <PageHeader page-title="管理" />
   <div class="flex flex-col gap-4">
     <!-- card infomation -->
     <div class="flex justify-between gap-4">
@@ -67,19 +67,17 @@
       </el-card>
     </div>
     <el-divider />
-    <div class="flex justify-evenly">
-      <Echart1 />
-      <Echart2 />
+    <div class="flex justify-evenly gap-2">
+      <LineCostAnalysis class="grow basis-1" />
+      <PieGraph class="grow basis-1" />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import Echart1 from "../components/Echart1.vue";
-import Echart2 from "../components/Echart2.vue";
 import PageHeader from "../components/PageHeader.vue";
-const income = ref<number>(1919810);
-const expense = ref<number>(114514);
+const income = ref<number>(514);
+const expense = ref<number>(114);
 const netIncome = ref<number>((income.value as number) - (expense.value as number));
 </script>
 

@@ -81,17 +81,4 @@ function confirmlogin() {
     ElMessage({ message: "登录失败！请检查用户名和密码。", type: "error" });
   }
 }
-// const isRegisterPannelEnabled = ref<boolean>(false);
-// const isRegister = ref<boolean>(false);
-// function handleRegister(isregistered: boolean) {
-//   isLogin.value = isregistered;
-// }
-// function handleRegisterClick() {
-//   if (!isLogin.value) {
-//     isRegisterPannelEnabled.value = true;
-//     // router.push('/login');
-//   } else {
-//     isRegister.value = false;
-//   }
-// }
 </script>
