@@ -26,7 +26,7 @@
           <el-select v-model="currentMode" size="small" style="width: 60px" :disabled="!on">
             <el-option v-for="mode in modeOptions" :key="mode.value" :label="mode.label" :value="mode.value">
               <div class="flex items-center justify-between">
-                <img :src="`images/icons/${mode.value}.svg`" :alt="mode.label" class="h-6 w-6 text-primary-100" />
+                <img :src="`images/icons/${mode.label}.svg`" :alt="mode.label" class="h-6 w-6 text-primary-100" />
                 <span> {{ mode.label }}</span>
               </div>
             </el-option>
@@ -42,7 +42,7 @@
       <div>
         <button
           type="button"
-          @click="() => (fanSpeed = (on = !on) ? fanSpeed : 0)"
+          @click="togglePower"
           class="h-11 w-11 rounded-full border border-transparent bg-neutral-100 p-2 transition-colors"
           :class="{
             'text-primary-400': on,
@@ -66,7 +66,7 @@
         <div
           class="inline-block w-24 align-bottom transition-colors"
           :style="{
-            color: temperatureToHSL(temperature)
+            color: temperatureToHSL(temperature as number)
           }"
         >
           <span class="text-6xl font-bold">{{ temperature }}</span>
@@ -108,7 +108,7 @@
       <div>
         <el-button v-if="!isCheckedIn" @click="handleCheckin"> 入住 </el-button>
         <el-button v-else @click="handleCheckout"> 退房 </el-button>
-        <el-dialog v-model="showBillDialog" center title="账单" append-to-body>
+        <el-dialog v-model="showBillDialog" center title="帐单" append-to-body>
           <el-table :data="billDetails" stripe>
             <el-table-column prop="start_time" label="开始时间" width="120" />
             <el-table-column prop="end_time" label="结束时间" width="120" />
@@ -121,24 +121,22 @@
           </el-table>
         </el-dialog>
       </div>
-      <span class="text-xs text-neutral-500"
-        >最后更新于
-        {{
-          lastUpdate.toLocaleDateString("zh-cn", {
-            month: "short",
-            day: "numeric",
-            hour: "numeric",
-            minute: "numeric"
-          })
-        }}</span
-      >
+      <span class="text-xs text-neutral-500">最后更新于 {{ dateConverter(lastUpdate as any) }}</span>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { Check, Close } from "@element-plus/icons-vue";
-import { checkInRoom, checkOutRoom, DeviceData, getRoomStatus, ERROR_CODE_MAP, UNKNOWN_ERROR } from "../utils/requests";
+import {
+  checkInRoom,
+  checkOutRoom,
+  DeviceData,
+  getRoomStatus,
+  operationDevice,
+  ERROR_CODE_MAP,
+  UNKNOWN_ERROR
+} from "../utils/requests";
 import P5 from "p5";
 
 const props = defineProps({
@@ -177,15 +175,42 @@ const marks = {
 
 const isCheckedIn = ref<boolean>(true);
 const showBillDialog = ref<boolean>(false);
+const totalCost = ref<number>(0);
+const totalDuration = ref<number>(0);
+const billDetails = ref<DeviceData[]>();
 
-const on = ref(true);
+const on = ref(false);
 const currentMode = ref(3);
 const sweeping = ref(on ? true : false);
-const temperature = ref(Math.floor(Math.random() * 30));
+const temperature = ref<number>();
 const minTemperature = 15;
 const maxTemperature = 35;
 const fanSpeed = ref(on.value ? 1 : 0);
 const lastUpdate = ref<Date>(new Date());
+
+function control(operation: string, data: any) {
+  operationDevice(
+    null as any,
+    props.roomId,
+    operation,
+    data,
+    () => {},
+    err => {
+      ElMessage({
+        message: ERROR_CODE_MAP[err] || UNKNOWN_ERROR,
+        type: "error"
+      });
+    }
+  );
+}
+
+function togglePower() {
+  if (on.value) {
+    control("turn_off", null);
+  } else {
+    control("turn_on", null);
+  }
+}
 
 function handleCheckin() {
   isCheckedIn.value = true;
@@ -209,10 +234,6 @@ function handleCheckin() {
 }
 
 function handleCheckout() {
-  showBillDialog.value = true;
-  isCheckedIn.value = false;
-  on.value = false;
-  fanSpeed.value = 0;
   checkOutRoom(
     null as any,
     props.roomId,
@@ -243,24 +264,18 @@ function handleCheckout() {
   );
 }
 
-const totalCost = ref<number>(0);
-const totalDuration = ref<number>(0);
-const billDetails = ref<DeviceData[]>();
-
-function dateConverter(date: string) {
-  return new Date(date).toLocaleDateString("zh-cn", dateOptions as Intl.DateTimeFormatOptions);
-}
-
-function updateRoomStatus() {
+function subRoomStatus() {
   getRoomStatus(
     null as any,
     props.roomId,
     data => {
       on.value = data.is_on;
+      if (on.value) {
+        fanSpeed.value = data.wind_speed;
+      }
       temperature.value = data.temperature;
-      currentMode.value = data.mode;
+      currentMode.value = data.mode === "cool" ? 1 : data.mode === "heat" ? 2 : 3;
       sweeping.value = data.sweep;
-      fanSpeed.value = data.wind_speed;
       lastUpdate.value = data.last_update;
     },
     err => {
@@ -270,6 +285,10 @@ function updateRoomStatus() {
       });
     }
   );
+}
+
+function dateConverter(date: string) {
+  return new Date(date).toLocaleDateString("zh-cn", dateOptions as Intl.DateTimeFormatOptions) as string;
 }
 
 function temperatureToHSL(temp: number) {
@@ -287,8 +306,8 @@ let intervalId = 0;
 let angle = 0;
 let buffer: P5.Graphics;
 onMounted(() => {
-  updateRoomStatus();
-  // intervalId = setInterval(updateRoomStatus, 5000);
+  subRoomStatus();
+  intervalId = setInterval(subRoomStatus, 2000);
   new P5(
     (p: P5) => {
       p.setup = () => {
