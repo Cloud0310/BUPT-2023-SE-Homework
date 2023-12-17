@@ -1,10 +1,16 @@
+import time
+
 from flask import Blueprint, request, jsonify
+
 from app.models import Device
+
 from app.scheduler import client_remote_map, scheduler
 from app.utils import verify_signature
 
 client_blueprint = Blueprint("client", __name__)
 
+
+# 判断客户端是否在线的函数
 @client_blueprint.route("/api/device/client", methods=["POST"])
 def handle_client_online():
     if not scheduler.special_initialized:
@@ -20,11 +26,15 @@ def handle_client_online():
     port = data.get("port")
     unique_id = data.get("unique_id")
     signature = data.get("signature")
+
+    # 当客户端响应，说明有人入住，设置初始状态
+    # 检查房间是否存在
     room = Device.query.filter_by(room=room_id).first()
     if not room:
         return jsonify({"error": "Room not found"}), 404
 
     public_key = room.public_key
+    # 验证签名
     verify_str = str(room_id) + str(unique_id) + str(port)
     if not verify_signature(verify_str, public_key, signature):
         return jsonify({"error": "Signature verification failed"}), 403

@@ -1,9 +1,14 @@
-from flask import Blueprint, jsonify, session
+# 处理数据查询文件
+from flask import Blueprint, request, jsonify, session
 from app.models import Status, Device
+from app import db
 from sqlalchemy import desc
+
 
 query_blueprint = Blueprint("query", __name__)
 
+
+# 获得某个房间的状态
 @query_blueprint.route("/api/status/<room_id>", methods=["GET"])
 def get_status(room_id):
     if "user_id" not in session:
@@ -43,6 +48,7 @@ def get_status(room_id):
         return jsonify({"error": "Room not found"}), 404
 
 
+# 获得全部房间的状态
 @query_blueprint.route("/api/status", methods=["GET"])
 def get_all_status():
     if "user_id" not in session:
