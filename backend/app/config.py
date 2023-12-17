@@ -4,6 +4,13 @@ import os
 Hint: config.py is a file that contains all the configuration variables for the app.
 """
 
+def get_env_variable(name):
+    try:
+        return os.environ[name]
+    except KeyError:
+        message = "Expected environment variable '{}' not set.".format(name)
+        raise Exception(message)
+
 class Config:
     # Config server address and port
     FLASK_RUN_HOST = "0.0.0.0"

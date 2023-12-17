@@ -1,8 +1,23 @@
 from app import db
+from datetime import datetime
 
 """
 Hint: models.py is a file that contains all the database models for the app.
 """
+
+def set_default(obj):
+    if isinstance(obj, set):
+        return list(obj)
+    raise TypeError
+
+
+def init_status():
+    status = Status.query.all()
+    if len(status) == 0:
+        for i in range(1, 11):
+            new_status = Status(room_id=i, temperature=26, wind_speed=0, mode="cold", sweep=False, is_on=False, last_update=datetime.now())
+            db.session.add(new_status)
+        db.session.commit()
 
 # Record device's status
 class Status(db.Model):

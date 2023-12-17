@@ -1,21 +1,24 @@
 ```
 backend/
 |-- app/
-|      |-- views/           # 视图函数
-|          |-- auth.py      # 包含登录和注销的视图函数
-|          |-- admin.py     # 包含设备管理相关的视图函数
-|          |-- control.py   # 处理客户端控制操作
+|      |-- views/           # 视图
+|          |-- __init__.py  # 测试文件
+|          |-- admin.py     # 设备管理相关的视图函数
+|          |-- auth.py      # 登录和注销的视图函数
 |          |-- client.py    # 处理有关客户端
-|          |-- billing.py   # 生成账单和详单的视图函数
-|          |-- query.py     # 包含数据查询相关的视图函数
-|          |-- room.py      # 包含房间相关的视图函数
+|          |-- control.py   # 处理客户端控制操作
+|          |-- query.py     # 数据查询相关的视图函数
+|          |-- room.py      # 房间相关的视图函数
 |      |-- config.py        # 配置文件
-|      |-- run.py           # 构建实例
 |      |-- models.py        # 数据库模型
-|      |-- utils.py         # 存储辅助函数和工具函数
+|      |-- run.py           # 构建实例
+|      |-- scheduler.py     # 调度逻辑
+|      |-- utils.py         # 辅助函数和工具函数
 |-- data/
 |      |-- buptse.db        # Sqlite 数据库
-|-- cli.py          		# 运行文件
+|      |-- Bupt.db          # Sqlite 数据库备份
+|      |-- buptse.sql       # SQL 文件
+|-- start_client.py         # 运行文件
 ```
 ## 后端部分交互使用说明文档
 
@@ -149,7 +152,7 @@ sqlite> CREATE TABLE Reports(
 
 比如你可以访问 `http://127.0.0.1:11451/hello`
 
-或者你使用登录功能，访问 `http://127.0.0.1:11451/login`，参数在 Body 里写这样的 json:
+或者你使用登录功能，访问 `http://127.0.0.1:11451/api/login`，参数在 Body 里写这样的 json:
 
 ```
 {
@@ -160,4 +163,4 @@ sqlite> CREATE TABLE Reports(
 
 ![image](../backend/img/3.png)
 
-退出登录的话，就 `http://127.0.0.1:11451/login`
+退出登录的话，就 `http://127.0.0.1:11451/api/logout`

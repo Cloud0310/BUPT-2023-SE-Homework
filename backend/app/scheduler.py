@@ -17,6 +17,19 @@ from app.models import Status
 Hint: scheduler.py is a file that contains all the scheduler functions for the app.
 """
 
+def client_control_v2(room_id, public_key, operation, value):
+    response = requests.post(
+        client_remote_map[room_id],
+        base64.urlsafe_b64encode(
+            rsa.encrypt(json.dumps({"operation": operation, "data": value}).encode(), public_key)
+        ).decode(),
+    )
+    print("Send control to ", client_remote_map[room_id], " with operation ", operation, " and value ", value)
+    if response.status_code == 204:
+        return True
+    else:
+        return False
+
 class Scheduler:
     def __init__(self):
         self.waiting_queue = deque()

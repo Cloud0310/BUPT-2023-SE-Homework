@@ -2,10 +2,28 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.hazmat.primitives.serialization import load_pem_public_key
+from cryptography.exceptions import InvalidSignature
 
 """
 Hint: __init__.py is a special file that is run when the app is initialized.
 """
+
+def verify_signature_v2(verify_str, public_key, signature):
+    try:
+        public_key = load_pem_public_key(public_key)
+        public_key.verify(
+            signature,
+            verify_str.encode(),
+            padding.PKCS1v15(),
+            hashes.SHA256()
+        )
+        return True
+    except InvalidSignature:
+        return False
+    
 
 # Create app instance
 def create_app():
