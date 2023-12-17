@@ -76,8 +76,8 @@
 
 <script lang="ts" setup>
 import PageHeader from "../components/PageHeader.vue";
-const income = ref<number>(1919810);
-const expense = ref<number>(114514);
+const income = ref<number>(514);
+const expense = ref<number>(114);
 const netIncome = ref<number>((income.value as number) - (expense.value as number));
 </script>
 

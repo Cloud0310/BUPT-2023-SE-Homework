@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 
-export const API_BASE_URL = "http://localhost:11451/api";
+export const API_BASE_URL = "http://10.29.15.1:11451/api";
 
 // Instance Initialization --------------------------------------
 const protocol = axios.create({
@@ -59,17 +59,6 @@ export function getAvailableDevices(
     errorCallback: (errorCode: number) => void
 ) {
     createWithCSRFToken(protocol.get, "/admin/devices", csrfToken, {}).then(
-        data => successCallback(data),
-        errorCode => errorCallback(errorCode)
-    );
-}
-
-export function getAvailableDevicesWithOpen(
-    csrfToken: string,
-    successCallback: (data: any) => void,
-    errorCallback: (errorCode: number) => void
-) {
-    createWithCSRFToken(protocol.get, "/status", csrfToken, {}).then(
         data => successCallback(data),
         errorCode => errorCallback(errorCode)
     );

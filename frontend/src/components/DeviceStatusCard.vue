@@ -106,14 +106,12 @@
     <!-- last update time -->
     <div class="flex justify-between">
       <div>
-        <el-button v-if="!isCheckedIn" @click="isCheckedIn = true"> 入住 </el-button>
-        <el-button v-else @click="(showBillDialog = true), (isCheckedIn = false), (on = false), (fanSpeed = 0)">
-          退房
-        </el-button>
+        <el-button v-if="!isCheckedIn" @click="handleCheckin"> 入住 </el-button>
+        <el-button v-else @click="handleCheckout"> 退房 </el-button>
         <el-dialog v-model="showBillDialog" center title="账单" append-to-body>
-          <el-table :data="billData" stripe>
-            <el-table-column prop="startTime" label="开始时间" width="120" />
-            <el-table-column prop="endTime" label="结束时间" width="120" />
+          <el-table :data="billDetails" stripe>
+            <el-table-column prop="start_time" label="开始时间" width="120" />
+            <el-table-column prop="end_time" label="结束时间" width="120" />
             <el-table-column prop="temperature" label="温度" />
             <el-table-column prop="wind_speed" label="风速" />
             <el-table-column prop="mode" label="模式" />
@@ -140,6 +138,7 @@
 
 <script lang="ts" setup>
 import { Check, Close } from "@element-plus/icons-vue";
+import { checkInRoom, checkOutRoom, DeviceData, getRoomStatus, ERROR_CODE_MAP, UNKNOWN_ERROR } from "../utils/requests";
 import P5 from "p5";
 
 const props = defineProps({
@@ -158,15 +157,15 @@ const dateOptions = {
 
 const modeOptions = [
   {
-    value: "cool",
+    value: 1,
     label: "制冷"
   },
   {
-    value: "heat",
+    value: 2,
     label: "制热"
   },
   {
-    value: "auto",
+    value: 3,
     label: "自动"
   }
 ];
@@ -176,118 +175,11 @@ const marks = {
   25: "25℃"
 };
 
-interface roomStatus {
-  roomId: number;
-  isOn: boolean;
-  temperature: number;
-  mode: string;
-  windSpeed: number;
-  isWeeping: boolean;
-  lastUpdate: Date;
-}
-
-function dateConverter(date: string) {
-  return new Date(date).toLocaleDateString("zh-cn", dateOptions as Intl.DateTimeFormatOptions);
-}
-
-const billData = [
-  {
-    startTime: dateConverter("01-01 00:12:00"),
-    endTime: dateConverter("01-01 01:12:00"),
-    temperature: "25℃",
-    wind_speed: "2",
-    mode: "制冷",
-    sweep: "是",
-    duration: "1 小时",
-    cost: "10 元"
-  },
-  {
-    startTime: dateConverter("01-01 02:12:00"),
-    endTime: dateConverter("01-01 03:12:00"),
-    temperature: "18℃",
-    wind_speed: "3",
-    mode: "制冷",
-    sweep: "是",
-    duration: "30 分钟",
-    cost: "5 元"
-  },
-  {
-    startTime: dateConverter("01-01 04:12:00"),
-    endTime: dateConverter("01-01 05:12:00"),
-    temperature: "25℃",
-    wind_speed: "2",
-    mode: "制冷",
-    sweep: "是",
-    duration: "1 小时",
-    cost: "10 元"
-  },
-  {
-    startTime: dateConverter("01-01 06:12:00"),
-    endTime: dateConverter("01-01 07:12:00"),
-    temperature: "18℃",
-    wind_speed: "3",
-    mode: "制冷",
-    sweep: "是",
-    duration: "30 分钟",
-    cost: "5 元"
-  },
-  {
-    startTime: dateConverter("01-01 08:12:00"),
-    endTime: dateConverter("01-01 09:12:00"),
-    temperature: "25℃",
-    wind_speed: "2",
-    mode: "制冷",
-    sweep: "是",
-    duration: "1 小时",
-    cost: "10 元"
-  },
-  {
-    startTime: dateConverter("01-01 10:12:00"),
-    endTime: dateConverter("01-01 11:12:00"),
-    temperature: "18℃",
-    wind_speed: "3",
-    mode: "制冷",
-    sweep: "是",
-    duration: "30 分钟",
-    cost: "5 元"
-  },
-  {
-    startTime: dateConverter("01-01 12:12:00"),
-    endTime: dateConverter("01-01 13:12:00"),
-    temperature: "25℃",
-    wind_speed: "2",
-    mode: "制冷",
-    sweep: "是",
-    duration: "1 小时",
-    cost: "10 元"
-  }
-];
-
-function getRoomStatus(
-  csrfToken: string,
-  roomId: string,
-  onSuccess: (s: roomStatus) => void,
-  onError: (e: string) => void
-) {
-  csrfToken;
-  roomId;
-  const s = {
-    roomId: 114,
-    isOn: true,
-    temperature: 25,
-    mode: "cool",
-    windSpeed: 2,
-    isWeeping: false,
-    lastUpdate: new Date()
-  };
-  onSuccess(s);
-  onError("failed");
-}
 const isCheckedIn = ref<boolean>(true);
 const showBillDialog = ref<boolean>(false);
 
 const on = ref(true);
-const currentMode = ref(on ? "cool" : "off");
+const currentMode = ref(3);
 const sweeping = ref(on ? true : false);
 const temperature = ref(Math.floor(Math.random() * 30));
 const minTemperature = 15;
@@ -295,17 +187,88 @@ const maxTemperature = 35;
 const fanSpeed = ref(on.value ? 1 : 0);
 const lastUpdate = ref<Date>(new Date());
 
+function handleCheckin() {
+  isCheckedIn.value = true;
+  checkInRoom(
+    null as any,
+    props.roomId,
+    data => {
+      console.log(`checkedIn${data}`);
+      ElMessage({
+        message: `${data.room} 入住成功`,
+        type: "success"
+      });
+    },
+    err => {
+      ElMessage({
+        message: ERROR_CODE_MAP[err] || UNKNOWN_ERROR,
+        type: "error"
+      });
+    }
+  );
+}
+
+function handleCheckout() {
+  showBillDialog.value = true;
+  isCheckedIn.value = false;
+  on.value = false;
+  fanSpeed.value = 0;
+  checkOutRoom(
+    null as any,
+    props.roomId,
+    data => {
+      ElMessage({
+        type: "success",
+        message: `${data.room} 退房成功`
+      });
+      showBillDialog.value = true;
+      isCheckedIn.value = false;
+      on.value = false;
+      fanSpeed.value = 0;
+
+      totalCost.value = data.report.total_cost;
+      totalDuration.value = data.report.total_duration;
+      billDetails.value = data.report.details;
+      billDetails.value.forEach(val => {
+        val.start_time = dateConverter(val.start_time);
+        val.end_time = dateConverter(val.end_time);
+      });
+    },
+    err => {
+      ElMessage({
+        type: "error",
+        message: ERROR_CODE_MAP[err] || UNKNOWN_ERROR
+      });
+    }
+  );
+}
+
+const totalCost = ref<number>(0);
+const totalDuration = ref<number>(0);
+const billDetails = ref<DeviceData[]>();
+
+function dateConverter(date: string) {
+  return new Date(date).toLocaleDateString("zh-cn", dateOptions as Intl.DateTimeFormatOptions);
+}
+
 function updateRoomStatus() {
   getRoomStatus(
-    "csrfToken",
+    null as any,
     props.roomId,
-    s => {
-      currentMode.value = s.mode;
-      sweeping.value = s.isWeeping;
-      temperature.value = s.temperature;
-      on.value = s.isOn;
+    data => {
+      on.value = data.is_on;
+      temperature.value = data.temperature;
+      currentMode.value = data.mode;
+      sweeping.value = data.sweep;
+      fanSpeed.value = data.wind_speed;
+      lastUpdate.value = data.last_update;
     },
-    () => {}
+    err => {
+      ElMessage({
+        type: "error",
+        message: ERROR_CODE_MAP[err] || UNKNOWN_ERROR
+      });
+    }
   );
 }
 
@@ -318,6 +281,7 @@ function temperatureToHSL(temp: number) {
   }
 }
 
+// fan animation
 let intervalId = 0;
 
 let angle = 0;

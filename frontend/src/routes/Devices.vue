@@ -33,9 +33,23 @@
 <script lang="ts" setup>
 import PageHeader from "../components/PageHeader.vue";
 import DeviceStatusCard from "../components/DeviceStatusCard.vue";
+import { getAvailableDevices, ERROR_CODE_MAP, UNKNOWN_ERROR } from "../utils/requests";
 
-const roomIDs = ref<string[]>(["1-114", "5-514", "1-191", "1-115", "5-513", "1-192", "1-119"]);
+const roomIDs = ref<string[]>([]);
 const addDeviceDialogVisible = ref(false);
 const deviceId = ref("");
 const deviceKey = ref("");
+
+getAvailableDevices(
+  null as any,
+  data => {
+    roomIDs.value = data;
+  },
+  err => {
+    ElMessage({
+      type: "error",
+      message: `出现错误${ERROR_CODE_MAP[err] ?? UNKNOWN_ERROR}`
+    });
+  }
+);
 </script>

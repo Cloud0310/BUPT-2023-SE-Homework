@@ -10,7 +10,7 @@
       <button
         type="button"
         class="flex w-[200px] items-center justify-evenly rounded-xl bg-primary-100 p-3"
-        @click="showLoginPanel = true"
+        @click="loginStore.showLoginDialog = true"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -24,12 +24,16 @@
         </svg>
         <span class="inline-block align-middle text-5xl font-bold text-neutral-400"> 登录 </span>
       </button>
-      <el-dialog v-model="showLoginPanel" append-to-body title="登录" width="30%">
+      <el-dialog v-model="loginStore.showLoginDialog" append-to-body title="登录" width="30%">
         <div class="flex flex-col gap-4 px-12">
-          <el-input v-model="username" placeholder="请输入用户名" clearable />
-          <el-input v-model="password" placeholder="请输入密码" clearable type="password" show-password />
+          <el-input v-model="loginStore.username" placeholder="请输入用户名" clearable />
+          <el-input v-model="loginStore.password" placeholder="请输入密码" clearable type="password" show-password />
           <div class="flex justify-end">
-            <el-button type="primary" @click="handleLogin" style="--el-color-primary-light-3: #ddd6fe" small
+            <el-button
+              type="primary"
+              @click="loginStore.handleLogin()"
+              style="--el-color-primary-light-3: #ddd6fe"
+              small
               >登录</el-button
             >
           </div>
@@ -40,22 +44,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-import { login } from '../utils/requests.ts';
+import { useLoginStore } from "../utils/states";
 
-const showLoginPanel = ref(false);
-const username = ref("");
-const password = ref("");
-
-const handleLogin = () => {
-  login(username.value, password.value, (data) => {
-    console.log('登录成功:', data);
-    ElMessage({ message: "登录成功！欢迎使用！", type: "success" });
-  }, (errorCode) => {
-    console.error('登录错误:', errorCode);
-    ElMessage.error('登录失败！请检查用户名和密码。');
-  });
-  showLoginPanel.value = false;
-};
-
+const loginStore = useLoginStore();
 </script>

@@ -25,7 +25,6 @@ import VChart, { THEME_KEY } from "vue-echarts";
 import { ref, provide } from "vue";
 
 const income = Array.from({ length: 30 }, () => Math.floor(Math.random() * (1000 - 500 + 1)) + 500);
-console.log(income);
 const cost = Array.from({ length: 30 }, () => Math.floor(Math.random() * (500 - 300 + 1)) + 300);
 const netIncome = Array.from({ length: cost.length }, (_, index) => income[index] - cost[index]);
 
@@ -78,10 +77,7 @@ const option = ref<any>({
   },
   color: "#a78bfa",
   tooltip: {
-    trigger: "axis",
-    axisPointer: {
-      type: "cross"
-    }
+    trigger: "axis"
   },
   xAxis: {
     type: "category",

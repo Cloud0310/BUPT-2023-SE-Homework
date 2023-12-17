@@ -1,4 +1,5 @@
 import { createApp } from "vue";
+import { createPinia } from "pinia";
 import "./style.css";
 import App from "./App.vue";
 import Admin from "./routes/Admin.vue";
@@ -14,6 +15,7 @@ const routes = [
     { path: "/", component: Welcome }
 ];
 
+const pinia = createPinia();
 const router = createRouter({
     history: createWebHistory(),
     routes
@@ -22,4 +24,5 @@ const router = createRouter({
 const app = createApp(App);
 
 app.use(router);
+app.use(pinia);
 app.mount("#app");
