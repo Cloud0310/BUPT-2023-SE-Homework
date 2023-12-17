@@ -23,7 +23,7 @@
       <el-input v-model="deviceKey" placeholder="请输入新设备公钥" />
     </div>
     <div class="my-4 flex w-full justify-end">
-      <el-button type="primary" @click="addDeviceDialogVisible = false" style="--el-color-primary-light-3: #ddd6fe"
+      <el-button type="primary" @click="handleaddDevice" style="--el-color-primary-light-3: #ddd6fe"
         >添加</el-button
       >
     </div>
@@ -33,9 +33,21 @@
 <script lang="ts" setup>
 import PageHeader from "../components/PageHeader.vue";
 import DeviceStatusCard from "../components/DeviceStatusCard.vue";
+import { addDevice } from "../utils/requests.ts";
 
 const roomIDs = ref<string[]>(["1-114", "5-514", "1-191", "1-115", "5-513", "1-192", "1-119"]);
 const addDeviceDialogVisible = ref(false);
 const deviceId = ref("");
 const deviceKey = ref("");
+
+const handleaddDevice = () => {
+  addDevice("csrfToken",deviceKey.value, deviceId.value,(data) => {
+    console.log(data);
+    addDeviceDialogVisible.value = false;
+    ElMessage({ showClose: true,message: "添加设备成功！", type: "success" });
+  }, (errorCode) => {
+    console.error(errorCode);
+    ElMessage({ showClose: true,message: "添加设备失败！", type: "error" });
+  });
+};
 </script>
