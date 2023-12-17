@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 
-export const API_BASE_URL = "http://10.29.15.1:11451/api";
+export const API_BASE_URL = "http://127.0.0.1:11451/api";
 
 // Instance Initialization --------------------------------------
 const protocol = axios.create({

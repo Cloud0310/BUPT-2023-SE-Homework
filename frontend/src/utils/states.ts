@@ -10,15 +10,11 @@ export const useLoginStore = defineStore("store", () => {
     const role = ref<"admin" | "checkout" | "AC admin" | null>(null);
 
     function handleLogin() {
-        console.log(1111);
-
         if (username.value === "" || password.value === "") {
             ElMessage({
                 type: "warning",
                 message: "用户名或密码不能为空"
             });
-            console.log(login);
-
             return;
         }
         login(
