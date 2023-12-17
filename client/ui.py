@@ -237,6 +237,10 @@ class ui_Form(object):
         self.timer.timeout.connect(self.updateTime)
         self.timer.start(10000)  # 每10秒更新一次
 
+        self.timer1 = QtCore.QTimer(Form)
+        self.timer1.timeout.connect(self.updateTime1)
+        self.timer1.start(2000)
+
         self.PushButton.clicked.connect(self.toggleMode)
         self.ToolButton.clicked.connect(self.increaseTemperature)
         self.ToolButton_2.clicked.connect(self.decreaseTemperature)
@@ -353,11 +357,7 @@ class ui_Form(object):
         else:
             self.RadioButton.setChecked(False)
 
-    def updateTime(self):
-        # 更新 TimePicker 的时间为当前时间
-        currentDateTime = QtCore.QDateTime.currentDateTime()
-        self.TimePicker.setTime(currentDateTime.time())
-
+    def updateTime1(self):
         global global_state 
         global data
         # 更新全局变量
@@ -369,6 +369,12 @@ class ui_Form(object):
         # 接收服务端此时的state
         self.state = global_state
         self.update_radio_button_state()
+
+    def updateTime(self):
+        # 更新 TimePicker 的时间为当前时间
+        currentDateTime = QtCore.QDateTime.currentDateTime()
+        self.TimePicker.setTime(currentDateTime.time())
+        
         # 回温函数
         if self.state == "start":
             if (
