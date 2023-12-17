@@ -1,9 +1,9 @@
 from flask import Blueprint, request, jsonify, session
 from app import db
-from app.scheduler import scheduler
+from app.controller import scheduler
 from app.utils import check_csrf_token
 
-from app.models import Device, Status  # 获取关于设备的信息
+from app.datamodel import Device, Status  # 获取关于设备的信息
 
 admin_blueprint = Blueprint("admin", __name__)
 

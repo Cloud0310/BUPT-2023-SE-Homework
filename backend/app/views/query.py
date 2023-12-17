@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, session
-from app.models import Status, Device
+from app.datamodel import Status, Device
 from app import db
 from sqlalchemy import desc
 

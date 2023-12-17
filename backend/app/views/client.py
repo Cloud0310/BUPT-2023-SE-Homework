@@ -1,7 +1,7 @@
 import time
 from flask import Blueprint, request, jsonify
-from app.models import Device
-from app.scheduler import client_remote_map, scheduler
+from app.datamodel import Device
+from app.controller import client_remote_map, scheduler
 from app.utils import verify_signature
 
 client_blueprint = Blueprint("client", __name__)

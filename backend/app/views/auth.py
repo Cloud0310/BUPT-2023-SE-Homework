@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, session
 from app import db
-from app.models import User, Device
-from app.scheduler import scheduler
+from app.datamodel import User, Device
+from app.controller import scheduler
 
 auth_blueprint = Blueprint("auth", __name__)
 

@@ -1,7 +1,7 @@
 import asyncio
 from flask.cli import FlaskGroup
 from app import create_app
-from app.scheduler import scheduler
+from app.controller import scheduler
 
 # 创建 Flask 应用程序
 app = create_app()

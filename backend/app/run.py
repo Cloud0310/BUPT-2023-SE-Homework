@@ -1,5 +1,5 @@
 from app import create_app
-from app.scheduler import scheduler
+from app.controller import scheduler
 
 def main():
     app = create_app()

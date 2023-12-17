@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, session
-from app.models import Device
+from app.datamodel import Device
 from app.utils import verify_signature
-from app.scheduler import scheduler
+from app.controller import scheduler
 
 control_blueprint = Blueprint("control", __name__)
 
