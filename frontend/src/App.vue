@@ -1,22 +1,8 @@
 <script setup lang="ts">
-import { ref } from "vue";
+// import { ref } from "vue";
 import PanelSwitchButton from "./components/PanelSwitchButton.vue";
 import Login from "./components/Login.vue";
-// const dateInfo = ref<Date>(new Date(Date.now()));
 
-const isLoginPannelEnabled = ref<boolean>(false);
-const isLogin = ref<boolean>(false);
-function handleLogin(isLoggedIn: boolean) {
-  isLogin.value = isLoggedIn;
-}
-
-function handleLoginClick() {
-  if (!isLogin.value) {
-    isLoginPannelEnabled.value = true;
-  } else {
-    isLogin.value = false;
-  }
-}
 </script>
 
 <template>
@@ -83,21 +69,7 @@ function handleLoginClick() {
         </div>
       </div>
       <div class="my-5 flex w-full justify-center">
-        <PanelSwitchButton @click="handleLoginClick">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24">
-            <path
-              fill="currentColor"
-              d="M480.026-140.001v-50.255h277.409q4.616 0 8.462-3.847 3.847-3.846 3.847-8.462v-554.87q0-4.616-3.847-8.462-3.846-3.847-8.462-3.847H480.026v-50.255h277.409q25.788 0 44.176 18.388t18.388 44.176v554.87q0 25.788-18.388 44.176t-44.176 18.388H480.026Zm-41.922-181.54-35.845-35.947 97.385-97.385H140.001v-50.254h358.822l-97.384-97.385 35.589-36.204 159.126 159.254-158.05 157.921Z"
-            />
-          </svg>
-          <span v-if="isLogin">退出</span>
-          <span v-else>登录</span>
-        </PanelSwitchButton>
-        <Login
-          :is-login-pannel-enabled="isLoginPannelEnabled"
-          @close="isLoginPannelEnabled = false"
-          @login="handleLogin"
-        ></Login>
+        <Login></Login>
       </div>
     </div>
     <div class="h-full w-5/6 overflow-y-scroll bg-neutral-100 px-16" id="content">
