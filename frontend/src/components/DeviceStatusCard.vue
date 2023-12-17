@@ -383,7 +383,9 @@ function printDetails() {
 
   const csv = [
     header.join(","),
-    ...items.map((row: any) => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join(","))
+    ...(items as DeviceData[]).map((row: any) =>
+      header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join(",")
+    )
   ].join("\r\n");
 
   const blob = new Blob([csv], { type: "text/csv" });
