@@ -119,6 +119,19 @@
             <el-table-column prop="duration" label="时长" />
             <el-table-column prop="cost" label="费用" fixed="right" />
           </el-table>
+          <template #footer>
+            <span class="dialog-footer flex justify-end">
+              <el-button @click="printDetails">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" class="h-6 w-6" style="filter: grayscale(0.5);">
+                    <path
+                        fill="currentColor"
+                        d="M640-640v-120H320v120h-80v-200h480v200h-80Zm-480 80h640-640Zm560 100q17 0 28.5-11.5T760-500q0-17-11.5-28.5T720-540q-17 0-28.5 11.5T680-500q0 17 11.5 28.5T720-460Zm-80 260v-160H320v160h320Zm80 80H240v-160H80v-240q0-51 35-85.5t85-34.5h560q51 0 85.5 34.5T880-520v240H720v160Zm80-240v-160q0-17-11.5-28.5T760-560H200q-17 0-28.5 11.5T160-520v160h80v-80h480v80h80Z" 
+                      />
+                </svg>
+                <span>打印详单</span>
+              </el-button>
+            </span>
+          </template>    
         </el-dialog>
       </div>
       <span class="text-xs text-neutral-500"
@@ -245,7 +258,7 @@ function handleCheckout() {
 
 const totalCost = ref<number>(0);
 const totalDuration = ref<number>(0);
-const billDetails = ref<DeviceData[]>();
+const billDetails = ref<DeviceData[]>([]);
 
 function dateConverter(date: string) {
   return new Date(date).toLocaleDateString("zh-cn", dateOptions as Intl.DateTimeFormatOptions);
@@ -330,4 +343,44 @@ onMounted(() => {
 onUnmounted(() => {
   clearInterval(intervalId);
 });
+
+
+
+
+function printDetails(){
+  console.log("打印详单\n");
+  // const items = billDetails;
+  const items = billDetails.value;
+  const header = [
+    'start_time',
+    'end_time',
+    'temperature',
+    'wind_speed',
+    'mode',
+    'sweep',
+    'duration',
+    'cost'
+  ];
+
+  const replacer = (_: any, value: any) => {
+    if (typeof value === 'boolean') {
+      return value ? 'Yes' : 'No';
+    }
+    return value === null ? '' : value;
+  };
+
+  const csv = [
+    header.join(','),
+    ...items.map((row: any) => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join(','))
+  ].join('\r\n');
+
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const link = document.createElement('a');
+  link.href = window.URL.createObjectURL(blob);
+  link.download = 'bill_details.csv';
+
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
 </script>
