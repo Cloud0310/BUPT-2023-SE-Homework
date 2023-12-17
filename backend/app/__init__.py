@@ -3,11 +3,13 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
 
-# Create SQLAlchemy instance
-db = SQLAlchemy()
-migrate = Migrate()
+"""
+Hint: __init__.py is a special file that is run when the app is initialized.
+"""
 
+# Create app instance
 def create_app():
+    # Initialize app
     app = Flask(__name__)
     CORS(app, origins="*", supports_credentials=True)
 
@@ -28,6 +30,7 @@ def create_app():
     from app.views.control import control_blueprint
     from app.views.client import client_blueprint
 
+    # Register blueprints
     app.register_blueprint(auth_blueprint)
     app.register_blueprint(query_blueprint)
     app.register_blueprint(room_blueprint)
@@ -36,3 +39,7 @@ def create_app():
     app.register_blueprint(client_blueprint)
 
     return app
+
+# Create SQLAlchemy instance
+db = SQLAlchemy()
+migrate = Migrate()

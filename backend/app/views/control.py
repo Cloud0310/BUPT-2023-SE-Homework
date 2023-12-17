@@ -1,72 +1,23 @@
 from flask import Blueprint, request, jsonify, session
-from datetime import datetime
-from sqlalchemy import desc
-from app import db
-from app.models import Status, Device
-from app.utils import generate_timestamp_id, verify_signature
-from app.scheduler import scheduler, room_scheduler_map
+from app.models import Device
+from app.utils import verify_signature
+from app.scheduler import scheduler
 
 control_blueprint = Blueprint("control", __name__)
 
 def make_status(room_number_id, operation, value):
-    selected_room = room_scheduler_map[room_number_id]
-
-    # Check whether the room is in the database
-    status = Status.query.filter_by(room_id=room_number_id).order_by(desc(Status.last_update)).first()
-
-    if not status:
-        status = Status(
-            id=generate_timestamp_id(),
-            room_id=room_number_id,
-            temperature=25,
-            wind_speed=2,
-            mode="cool",
-            sweep=False,
-            is_on=False,
-            last_update=datetime.utcnow(),
-        )
-
-    new_status = Status(
-        room_id=status.room_id,
-        temperature=status.temperature,
-        wind_speed=status.wind_speed,
-        mode=status.mode,
-        sweep=status.sweep,
-        is_on=status.is_on,
-        last_update=datetime.utcnow(),
-    )
-
     if operation == "start":
-        return_code = scheduler.add_room_queue(selected_room)
-        if return_code:
-            new_status.is_on = True
-            selected_room.is_on = True
-        else:
-            new_status.is_on = False
-            selected_room.is_on = False
-    elif operation == "stop":
-        scheduler.close_air_conditioner(selected_room)
-        new_status.is_on = False
-        selected_room.is_on = False
-    elif operation == "temperature":
-        new_status.temperature = int(value)
-        selected_room.target_temperature = int(value)
-    elif operation == "wind_speed":
-        new_status.wind_speed = int(value)
-        selected_room.priority = int(value)
-    elif operation == "mode":
-        new_status.mode = value
-        selected_room.mode = value
-    elif operation == "sweep":
-        new_status.sweep = True
-    elif operation == "no_sweep":
-        new_status.sweep = False
-    else:
-        return jsonify({"error_code": 400, "message": "Invalid operation"}), 400
-
-    # Submit the new status to the database
-    db.session.add(new_status)
-    db.session.commit()
+        scheduler.add_room_in_queue(room_number_id)
+    if operation == "stop":
+        scheduler.remove_room_from_queue(room_number_id)
+    if operation == "temperature":
+        scheduler.update_temperature(room_number_id, int(value))
+    if operation == "wind_speed":
+        scheduler.update_wind_speed(room_number_id, int(value))
+    if operation == "mode":
+        scheduler.update_mode(room_number_id, value)
+    if operation == "sweep":
+        scheduler.update_sweep(room_number_id, value == "True")
 
     return jsonify({"message": "Operation successfully"}), 204
 
@@ -91,13 +42,13 @@ def server_control(room_id):
     time = data.get("time")
     unique_id = data.get("unique_id")
     signature = data.get("signature")
-
     room = Device.query.filter_by(room=room_id).first()
     if not room:
         return jsonify({"error": "Room not found"}), 404
 
     public_key = room.public_key
     verify_str = str(operation) + str(unique_id) + str(value) + str(time)
+    
     if not verify_signature(verify_str, public_key, signature):
         return jsonify({"error": "Signature verification failed"}), 403
 

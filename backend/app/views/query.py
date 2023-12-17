@@ -1,6 +1,5 @@
-from flask import Blueprint, request, jsonify, session
+from flask import Blueprint, jsonify, session
 from app.models import Status, Device
-from app import db
 from sqlalchemy import desc
 
 query_blueprint = Blueprint("query", __name__)
@@ -32,9 +31,9 @@ def get_status(room_id):
         else:
             response_data = {
                 "room": room.room,
-                "temperature": -1,
-                "wind_speed": 0,
-                "mode": "-",
+                "temperature": 26,
+                "wind_speed": 1,
+                "mode": "cool",
                 "sweep": False,
                 "is_on": False,
                 "last_update": "-1",

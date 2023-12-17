@@ -1,4 +1,3 @@
-# Test
 from flask import Blueprint, jsonify
 from flask_cors import CORS
 
