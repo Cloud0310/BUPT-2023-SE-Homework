@@ -11,6 +11,7 @@ class Demo(QWidget, ui_Form):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+        self.setWindowTitle(sys.argv[3])
 
 
 if __name__ == "__main__":

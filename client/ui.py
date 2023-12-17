@@ -18,15 +18,24 @@ import json
 import threading
 import rsa
 import base64
+import socket
+
+def get_available_port():
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.bind(('localhost', 0))
+    addr, port = sock.getsockname()
+    sock.close()
+    return port
 
 # 定义全局变量
 global_state = "stop"
 data = None
 server_IP = sys.argv[1]
 server_port = sys.argv[2]
+roomid = sys.argv[3]
 base_url = f"http://{server_IP}:{server_port}/api/device/client"
 DEBOUNCE_TIME = 2000
-
+port_global = get_available_port()
 
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
     def do_POST(self):
@@ -43,7 +52,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
                 rsa.PrivateKey.load_pkcs1(open("private.pem", "rb").read()),
             ).decode()
         )
-
+        print(data)
         # 打印接收到的数据（或进行其他处理）
         # print("Received POST request with data:", data)
 
@@ -54,13 +63,13 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         response = {"status": "success"}
         self.wfile.write(json.dumps(response).encode("utf-8"))
 
-
 def run_server(
-    server_class=HTTPServer, handler_class=SimpleHTTPRequestHandler, port=11451
+    server_class=HTTPServer, handler_class=SimpleHTTPRequestHandler, port=port_global
 ):
     server_address = ("", port)
     httpd = server_class(server_address, handler_class)
     httpd.serve_forever()
+
 
 
 class ui_Form(object):
@@ -81,8 +90,8 @@ class ui_Form(object):
         self.current_mode = "cold"
         self.sweep = "off"
         self.state = "stop"
-        self.room_id = "2-233"  # 假设的房间号
-
+        self.room_id = roomid 
+        self.port = port_global
         self.temp_update_timer = QtCore.QTimer(self)
         self.temp_update_timer.setInterval(DEBOUNCE_TIME)
         self.temp_update_timer.timeout.connect(self.send_temperature_update)
@@ -96,6 +105,13 @@ class ui_Form(object):
 
     def generate_unique_id(self):
         return secrets.token_hex(8)  # 生成 16 字符（8 字节）的十六进制字符串
+
+    def get_available_port():
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.bind(('localhost', 0))
+        addr, port = sock.getsockname()
+        sock.close()
+        return port
 
     # def generate_rsa_key_pair(self):
     #     # 生成 RSA 密钥对
@@ -115,11 +131,11 @@ class ui_Form(object):
         return signature
 
     def client_online(self):
-        port = "11451"  # 示例端口号
+        port = self.port  # 示例端口号
         unique_id = self.generate_unique_id()  # 生成 unique_id
         private_key = rsa.PrivateKey.load_pkcs1(open("private.pem", "rb").read())
         signature = self.generate_signature(
-            private_key, self.room_id + unique_id + port
+            private_key, self.room_id + unique_id + str(port)
         )  # 生成 signature
 
         global base_url
