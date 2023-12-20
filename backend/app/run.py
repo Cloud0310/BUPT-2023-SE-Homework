@@ -1,12 +1,11 @@
-from flask_cors import CORS
 from app import create_app
-from app.scheduler import scheduler
+from app.controller import scheduler
 
-"""
-Hint: run.py is a file that is run when the app is started.
-"""
+def main():
+    app = create_app()
+    with app.app_context():
+        scheduler.run_scheduler()
+    app.run(host="0.0.0.0", port=11451, debug=False)
 
 if __name__ == "__main__":
-    app = create_app()
-    scheduler.run_scheduler(app.app_context())
-    app.run(host="0.0.0.0", port=11451)
+    main()
